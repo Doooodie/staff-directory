@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Staff Directory — Test Task</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F0F2F5;--surface:#FFFFFF;--s2:#F7F8FA;--border:#E2E6ED;
+  --text:#1A1D23;--muted:#6B7280;
+  --accent:#3B5BDB;--abg:#EEF2FF;--aborder:#C5D0FA;
+  --green:#1E8A5E;--gbg:#EDFAF4;--gborder:#A7DFC8;
+  --orange:#C2680A;--obg:#FFF4E0;--oborder:#FFCB7A;
+  --red:#C92A2A;--rbg:#FFF5F5;
+  --purple:#6741D9;--pbg:#F3F0FF;--pborder:#C9B8F7;
+  --radius:8px;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;min-height:100vh}
+code{font-family:'SFMono-Regular',Consolas,monospace;font-size:11.5px;background:#EDF2FF;color:#364FC7;padding:1px 5px;border-radius:4px}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+
+.hdr{background:var(--surface);border-bottom:1px solid var(--border);padding:0 32px;position:sticky;top:0;z-index:100}
+.hdr-in{max-width:920px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:54px;gap:14px}
+.hdr-l{display:flex;align-items:center;gap:11px}
+.logo{width:32px;height:32px;background:var(--accent);border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;flex-shrink:0}
+.hdr-name{font-size:14px;font-weight:600}
+.hdr-sub{font-size:11px;color:var(--muted);margin-top:1px}
+.hdr-pill{background:var(--abg);color:var(--accent);font-size:12px;font-weight:600;padding:4px 12px;border-radius:20px;white-space:nowrap;border:1px solid var(--aborder)}
+
+.wrap{max-width:920px;margin:0 auto;padding:26px 32px 72px}
+
+.tabs{display:flex;gap:6px;margin-bottom:22px;background:var(--surface);padding:5px;border-radius:12px;border:1px solid var(--border);width:fit-content}
+.tab{padding:7px 18px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--muted);font-family:inherit;transition:all .15s}
+.tab:hover{color:var(--text)}
+.tab.active{background:var(--accent);color:#fff}
+
+.phase{display:none}
+.phase.visible{display:block}
+
+.hero{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:26px 30px;margin-bottom:20px}
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:7px}
+.hero h1{font-size:21px;font-weight:700;letter-spacing:-.4px;line-height:1.25;margin-bottom:10px}
+.hero-desc{font-size:13px;color:var(--muted);line-height:1.75;max-width:600px;margin-bottom:18px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+.tag{display:inline-flex;padding:3px 10px;border-radius:5px;font-size:12px;font-weight:500;border:1px solid transparent}
+.tnest{background:#E8F4FD;color:#1565C0;border-color:#BBDEFB}
+.tpg{background:#E8F5E9;color:#2E7D32;border-color:#C8E6C9}
+.tdocker{background:#E3F2FD;color:#0277BD;border-color:#B3E5FC}
+.tjwt{background:#FFF8E1;color:#F57F17;border-color:#FFE082}
+.tng{background:#F3E8FF;color:#6B21A8;border-color:#DDD6FE}
+.tgray{background:#F8F9FA;color:#495057;border-color:#DEE2E6}
+.meta{display:flex;gap:20px;flex-wrap:wrap}
+.mi{font-size:12px;color:var(--muted)}.mi strong{color:var(--text);font-weight:600}
+.hbar{height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin-top:14px}
+.hbar-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .35s;width:0%}
+.hbar-lbl{font-size:11px;color:var(--muted);margin-top:5px}
+
+.lock{background:#FFFBEB;border:1px solid #FDE68A;border-radius:12px;padding:14px 18px;margin-bottom:20px;display:flex;gap:10px;align-items:flex-start}
+.lock-ico{font-size:16px;flex-shrink:0;line-height:1.4}
+.lock-txt{font-size:13px;color:#78350F;line-height:1.65}
+.lock-txt strong{font-weight:600;color:#92400E}
+
+.legend{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.leg{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--muted)}
+
+.ms{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden}
+.ms-hd{display:flex;align-items:center;justify-content:space-between;padding:15px 20px;cursor:pointer;gap:10px;user-select:none;transition:background .12s}
+.ms-hd:hover{background:var(--s2)}
+.ms-l{display:flex;align-items:center;gap:11px;flex:1;min-width:0}
+.num{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.nbe{background:var(--abg);color:var(--accent);border:1px solid var(--aborder)}
+.nfe{background:var(--pbg);color:var(--purple);border:1px solid var(--pborder)}
+.nq{background:#F8F9FA;color:#495057;border:1px solid #DEE2E6}
+.ms-title{font-size:14px;font-weight:600;line-height:1.3}
+.ms-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.ms-r{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.ms-cnt{font-size:12px;color:var(--muted);white-space:nowrap}
+.chev{font-size:11px;color:var(--muted);transition:transform .2s;display:inline-block}
+.ms.open .chev{transform:rotate(180deg)}
+.ms-body{display:none;border-top:1px solid var(--border)}
+.ms.open .ms-body{display:block}
+
+.ctx{background:var(--s2);border-left:3px solid var(--accent);padding:14px 18px;border-bottom:1px solid var(--border)}
+.ctx-lbl{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:7px}
+.ctx p{font-size:13px;color:var(--text);line-height:1.75;margin-bottom:6px}
+.ctx p:last-child{margin:0}
+.ctx strong{font-weight:600}
+
+.item{display:flex;align-items:flex-start;gap:10px;padding:11px 20px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s}
+.item:last-child{border-bottom:none}
+.item:hover{background:var(--s2)}
+.item.done{opacity:.5}
+.item.done .itxt{text-decoration:line-through;color:var(--muted)}
+.cb{width:17px;height:17px;border:1.5px solid var(--border);border-radius:4px;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:all .15s;background:#fff;font-size:10px;color:transparent}
+.item.done .cb{background:var(--green);border-color:var(--green);color:#fff}
+.ibody{flex:1;min-width:0}
+.itxt{font-size:13px;color:var(--text);line-height:1.5}
+.inote{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.5}
+.badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;flex-shrink:0;margin-top:3px;white-space:nowrap;letter-spacing:.02em;text-transform:uppercase}
+.bmust{background:var(--rbg);color:var(--red);border:1px solid #FFC9C9}
+.bnice{background:var(--obg);color:var(--orange);border:1px solid var(--oborder)}
+.bbonus{background:var(--abg);color:var(--accent);border:1px solid var(--aborder)}
+
+.res-wrap{margin-top:22px}
+.res-lbl{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:11px}
+.res-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
+.rc{display:flex;align-items:flex-start;gap:11px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:13px 15px;text-decoration:none;transition:border-color .15s;cursor:pointer}
+.rc:hover{border-color:#ADB5BD;text-decoration:none}
+.rc-ico{font-size:22px;flex-shrink:0;line-height:1}
+.rc-name{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;line-height:1.3}
+.rc-desc{font-size:11px;color:var(--muted);line-height:1.5}
+
+.prog-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 26px;margin-bottom:18px;display:flex;gap:26px;flex-wrap:wrap;align-items:center}
+.prog-big{font-size:48px;font-weight:800;letter-spacing:-2px;color:var(--accent);line-height:1;min-width:80px}
+.prog-lbl{font-size:11px;color:var(--muted);margin-top:4px}
+.prog-bars{flex:1;min-width:180px}
+.br{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.br:last-child{margin-bottom:0}
+.br-name{font-size:12px;color:var(--muted);width:120px;flex-shrink:0}
+.br-track{flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden}
+.br-fill{height:100%;background:var(--accent);border-radius:3px;transition:width .4s}
+.br-val{font-size:12px;font-weight:600;color:var(--text);width:28px;text-align:right;flex-shrink:0}
+
+.reset-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);color:var(--muted);font-size:12px;cursor:pointer;font-family:inherit;transition:all .15s;margin-top:16px}
+.reset-btn:hover{border-color:#FC8181;color:var(--red)}
+
+@media(max-width:600px){
+  .wrap{padding:14px 14px 56px}
+  .hdr{padding:0 14px}
+  .hero{padding:18px 16px}
+  .hero h1{font-size:17px}
+  .ms-hd{padding:13px 14px}
+  .item{padding:10px 14px}
+  .ctx{padding:12px 14px}
+  .tabs{flex-wrap:wrap}
+}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-in">
+    <div class="hdr-l">
+      <div class="logo">SD</div>
+      <div>
+        <div class="hdr-name">Staff Directory — test task</div>
+        <div class="hdr-sub">Junior Fullstack · NestJS + Angular · learning-first</div>
+      </div>
+    </div>
+    <div class="hdr-pill" id="hdr-prog">0 / 0 done</div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="tabs">
+    <button class="tab active" onclick="showPhase('ph1',this)">① Phase 1 — Backend</button>
+    <button class="tab" onclick="showPhase('ph2',this)">② Phase 2 — Frontend</button>
+    <button class="tab" onclick="showPhase('ph3',this)">📊 Progress</button>
+  </div>
+
+  <!-- ══════════ PHASE 1 ══════════ -->
+  <div class="phase visible" id="ph1">
+
+    <div class="hero">
+      <div class="eyebrow">Phase 1 · Primary milestone</div>
+      <h1>Backend — NestJS + PostgreSQL</h1>
+      <p class="hero-desc">Build the API as a completely independent deliverable. No frontend exists yet. By the end of Phase 1, a reviewer must be able to fully explore and test everything via Swagger UI or Postman — without any UI whatsoever. Treat this as a shipped product before moving on.</p>
+      <div class="tags">
+        <span class="tag tnest">NestJS</span>
+        <span class="tag tpg">PostgreSQL</span>
+        <span class="tag tdocker">Docker Compose</span>
+        <span class="tag tjwt">JWT / Passport</span>
+        <span class="tag tgray">TypeORM</span>
+        <span class="tag tgray">class-validator</span>
+        <span class="tag tgray">Swagger</span>
+      </div>
+      <div class="meta">
+        <div class="mi">⏱ <strong>3–4 days</strong></div>
+        <div class="mi">📦 <strong>Deliverable: tested REST API</strong></div>
+        <div class="mi">🚀 <strong>Verified via Swagger or Postman</strong></div>
+      </div>
+      <div class="hbar"><div class="hbar-fill" id="hbf-be"></div></div>
+      <div class="hbar-lbl" id="hbl-be">0 of 0 steps completed</div>
+    </div>
+
+    <div class="legend">
+      <div class="leg"><span class="badge bmust">must</span> required</div>
+      <div class="leg"><span class="badge bnice">nice</span> strongly recommended</div>
+      <div class="leg"><span class="badge bbonus">bonus</span> above expectations</div>
+    </div>
+
+    <!-- Step 1 -->
+    <div class="ms open" id="ms1">
+      <div class="ms-hd" onclick="tms('ms1')">
+        <div class="ms-l">
+          <div class="num nbe">1</div>
+          <div>
+            <div class="ms-title">Project setup &amp; database</div>
+            <div class="ms-sub">Nest CLI · TypeORM · Docker Compose · migrations</div>
+          </div>
+        </div>
+        <div class="ms-r"><span class="ms-cnt" id="c-ms1">0 / 0</span><span class="chev">▾</span></div>
+      </div>
+      <div class="ms-body">
+        <div class="ctx">
+          <div class="ctx-lbl">Goal</div>
+          <p>After this step: <code>docker compose up -d</code> starts PostgreSQL, the NestJS app connects, and migrations run on boot. The reviewer should never need to install or configure a database manually.</p>
+        </div>
+        <div class="item" onclick="tog(this)" data-ms="ms1"><div class="cb">✓</div><div class="ibody"><div class="itxt">Bootstrap with Nest CLI — <code>nest new backend</code>, pick npm or yarn</div></div><span class="badge bmust">must</span></div>
+        <div class="item" onclick="tog(this)" data-ms="ms1"><div class="cb">✓</div><div class="ibody"><div class="itxt">Write <code>docker-compose.yml</code>: <code>postgres</code> service with a named volume and a healthcheck</div><div class="inote">Use <code>depends_on: condition: service_healthy</code> so the app waits until Postgres is ready</div></div><span class="badge bmust">must</span></div>
+        <div class="item" onclick="tog(this)" data-ms="ms1"><div class="cb">✓</div><div class="ibody"><div class="itxt">Create <code>.env.example</code>: DB_HOST, DB_PORT, DB_USER, DB_PASS, DB_NAME, JWT_SECRET, PORT</div><div class="inote">Add <code>.env</code> to <code>.gitignore</code> — credentials must never be committed</div></div><span class="badge bmust">must</span></div>
+        <div class="item" onclick="tog(this)" data-ms="ms1"><div class="cb">✓</div><div class="ibody"><div class="itxt">Install TypeORM, configure <code>TypeOrmModule.forRootAsync()</code> reading from <code>ConfigService</code></div><div class="inote">Set <code>synchronize: false</code> — always use explicit migrations, never auto-sync</div></div><span class="badge bmust">must</span></div>
+        <div class="item" onclick="tog(this)" data-ms="ms1"><div class="cb">✓</div><div class="ibody"><div class="itxt">Define entities: <strong>Employee</strong>, <strong>Department</strong>, <strong>Role</strong>, <strong>User</strong></div><div class="inote">Employee fields: firstName, lastName, email, hireDate, salary, isActive. Use @ManyToOne for Department and Role</div></div><span class="badge bmust">must</span></div>
+        <div class="item" onclick="tog(this)" data-ms="ms1"><div class="cb">✓</div><div class="ibody"><div class="itxt">Generate and run the initial migration: <code>typeorm migration:generate -n Init</code></div><div class="inote">Verify it creates all tables from scratch on a blank DB — this is your reproducibility check</div></div><span class="badge bmust">must</span></div>
+        <div class="item" onclick="tog(this)" data-ms="ms1"><div class="cb">✓</div><div class="ibody"><div class="itxt">Write a seed script: 3 departments, 5 roles, 20 realistic employees — <code>npm run seed</code></div><div class="inote">The reviewer must be able to browse real data immediately without creating anything manually</div></div><span class="badge bnice">nice</span></div>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="ms" id="ms2">
+      <div class="ms-hd" onclick="tms('ms2')">
+        <div class="ms-l">
+          <div class="num nbe">2</div>
+          <div>
+            <div class="ms-title">REST API — CRUD endpoints</div>
+            <div class="ms-sub">Employees · Departments · Roles · search · pagination</div>
+          </div>
+        </div>
+        <div class="ms-r"><span class="ms-cnt" id="c-ms2">0 / 0</span><span class="chev">▾</span></div>
+      </div>
+      <div class="ms-body">
+        <div class="ctx">
+          <div class="ctx-lbl">Business scenario</div>
+          <p>An HR manager maintains a company directory. Each <strong>Employee</strong> belongs to one <strong>Department</strong> and has one <strong>Role</strong>. Employees are never hard-deleted — only deactivated (<code>isActive = false</code>).</p>
+          <p><strong>Department</strong>: name, description. &nbsp;·&nbsp; <strong>Role</strong>: title, level (junior / mid / senior).</p>
+        </div>
+        <div class="item" onclick="tog(this)" data-ms="ms2"><div class="cb">✓</div><div class="ibody"><div class="itxt"><code>GET /employees</code> — paginated list with search and department filter</div><div class="inote">Query: <code>?search=John&amp;departmentId=uuid&amp;page=1&amp;limit=20</code>. Response: <code>{ data, total, page, limit }</code></div></div><span class="badge bmust">must</span></div>
+        <div class="item" onclick="tog(this)" data-ms="ms2"><div class="cb">✓</div><div class="ibody"><div class="itxt"><code>GET /employees/:id</code> · <code>POST</code> · <code>PATCH /:id</code> · <code>DELETE /:id</code></div><div class="inote">DELETE = soft delete only — set <code>isActive = false</code>, do NOT remove the row</div></div><span class="badge bmust">must</span></div>
+        <div class="item" onclick="tog(this)" data-ms="ms2"><div class="cb">✓</div><div class="ibody"><div class="itxt">Full CRUD for <code>/departments</code> and <code>/roles</code></div><div class="inote"><code>GET /departments</code> should include the count of active employees per department</div></div><span class="badge bmust">must</span></div>
+        <div class="item" onclick="tog(this)" data-ms="ms2"><div class="cb">✓</div><div class="ibody"><div class="itxt">DTO classes with <code>class-validator</code> on every endpoint</div><div class="inote">@IsEmail · @IsNotEmpty · @Min/@Max (salary) · @IsDateString (hireDate) · @IsUUID (relation IDs)</div></div><span class="badge bmust">must</span></div>
+        <div class="item" onclick="tog(this)" data-ms="ms2"><div class="cb">✓</div><div class="ibody"><div class="itxt">Correct HTTP status codes on all responses</div><div class="inote">201 on create · 404 not found · 409 email taken · 400 validation error</div></div><span class="badge bmust">must</span></div>
+        <div class="item" onclick="tog(this)" data-ms="ms2"><div class="cb">✓</div><div class="ibody"><div class="itxt">Global <code>ExceptionFilter</code> with a consistent JSON error shape</div><div class="inote"><code>{ statusCode, message, error, timestamp }</code> — no raw NestJS stack traces exposed</div></div><span class="badge bnice">nice</span></div>
+        <div class="item" onclick="tog(this)" data-ms="ms2"><div class="cb">✓</div><div class="ibody"><div class="itxt"><code>GET /employees/stats</code> — total, active count, avg salary grouped by department</div></div><span class="badge bnice">nice</span></div>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="ms" id="ms3">
+      <div class="ms-hd" onclick="tms('ms3')">
+        <div class="ms-l">
+          <div class="num nbe">3</div>
+          <div>
+            <div class="ms-title">Authentication — JWT</div>
+            <div class="ms-sub">Register · login · guard all routes</div>
+          </div>
+        </div>
+        <div class="ms-r"><span class="ms-cnt" id="c-ms3">0 / 0</span><span class="chev">▾</span></div>
+      </div>
+      <div class="ms-body">
+        <div class="ctx">
+          <div class="ctx-lbl">Goal</div>
+          <p>Every endpoint except <code>/auth/*</code> requires a valid JWT. Unauthenticated requests return <code>401</code>. A request with a valid token proceeds normally.</p>
+        </div>
+        <div class="item" onclick="tog(this)" data-ms="ms3"><div class="cb">✓</div><div class="ibody"><div class="itxt"><code>POST /auth/register</code> — hash password with bcrypt, return the user (without the password field)</div></div><span class="badge bmust">must</span></div>
+        <div class="item" onclick="tog(this)" data-ms="ms3"><div class="cb">✓</div><div class="ibody"><div class="itxt"><code>POST /auth/login</code> — verify credentials, return a signed JWT access token</div></div><span class="badge bmust">must</span></div>
+        <div class="item" onclick="tog(this)" data-ms="ms3"><div class="cb">✓</div><div class="ibody"><div class="itxt">Apply <code>JwtAuthGuard</code> globally; whitelist <code>/auth/*</code> with a <code>@Public()</code> custom decorator</div></div><span class="badge bmust">must</span></div>
+        <div class="item" onclick="tog(this)" data-ms="ms3"><div class="cb">✓</div><div class="ibody"><div class="itxt">Passport <code>JwtStrategy</code> — validates the token and attaches <code>req.user</code> to the request</div></div><span class="badge bmust">must</span></div>
+        <div class="item" onclick="tog(this)" data-ms="ms3"><div class="cb">✓</div><div class="ibody"><div class="itxt">Role-based guard: ADMIN can write, regular users can only read</div></div><span class="badge bbonus">bonus</span></div>
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="ms" id="ms4">
+      <div class="ms-hd" onclick="tms('ms4')">
+        <div class="ms-l">
+          <div class="num nq">4</div>
+          <div>
+            <div class="ms-title">Docs, tests &amp; delivery</div>
+            <div class="ms-sub">README · Swagger · Jest · Dockerfile</div>
+          </div>
+        </div>
+        <div class="ms-r"><span class="ms-cnt" id="c-ms4">0 / 0</span><span class="chev">▾</span></div>
+      </div>
+      <div class="ms-body">
+        <div class="ctx">
+          <div class="ctx-lbl">Definition of done for Phase 1</div>
+          <p>Reviewer clones the repo → copies <code>.env.example</code> to <code>.env</code> → runs <code>docker compose up -d</code> → runs migrations &amp; seed → <code>npm run start:dev</code> → opens <code>/api/docs</code> and tests everything. No questions needed.</p>
+        </div>
+        <div class="item" onclick="tog(this)" data-ms="ms4"><div class="cb">✓</div><div class="ibody"><div class="itxt">README with: stack overview, step-by-step run instructions, Swagger URL, seed command</div><div class="inote">Reviewer must be running in under 5 minutes without any prior knowledge of the project</div></div><span class="badge bmust">must</span></div>
+        <div class="item" onclick="tog(this)" data-ms="ms4"><div class="cb">✓</div><div class="ibody"><div class="itxt">Meaningful git commits throughout: <code>feat:</code>, <code>fix:</code>, <code>chore:</code> prefixes</div><div class="inote">Not "wip" or "stuff". See conventionalcommits.org — makes the history readable</div></div><span class="badge bmust">must</span></div>
+        <div class="item" onclick="tog(this)" data-ms="ms4"><div class="cb">✓</div><div class="ibody"><div class="itxt">Swagger UI at <code>/api/docs</code> via <code>@nestjs/swagger</code></div><div class="inote">Add @ApiTags, @ApiOperation, @ApiBearerAuth on protected routes — reviewer can test without Postman</div></div><span class="badge bnice">nice</span></div>
+        <div class="item" onclick="tog(this)" data-ms="ms4"><div class="cb">✓</div><div class="ibody"><div class="itxt">Unit test for at least one service with Jest and a mocked repository</div><div class="inote">Recommended: EmployeesService.create() — test duplicate email rejection and success path</div></div><span class="badge bnice">nice</span></div>
+        <div class="item" onclick="tog(this)" data-ms="ms4"><div class="cb">✓</div><div class="ibody"><div class="itxt">Multi-stage Dockerfile for the backend (build → slim production image)</div></div><span class="badge bbonus">bonus</span></div>
+      </div>
+    </div>
+
+    <div class="res-wrap">
+      <div class="res-lbl">📚 Learning resources — Phase 1</div>
+      <div class="res-grid">
+        <a class="rc" href="https://docs.nestjs.com" target="_blank"><div class="rc-ico">📖</div><div><div class="rc-name">NestJS official docs</div><div class="rc-desc">Start: Overview → Controllers → Providers → Modules. Essential reading before any code.</div></div></a>
+        <a class="rc" href="https://www.udemy.com/course/nestjs-zero-to-hero/" target="_blank"><div class="rc-ico">🎓</div><div><div class="rc-name">NestJS Zero to Hero (Udemy)</div><div class="rc-desc">Ariel Weinberger — the most popular NestJS course. Covers TypeORM, auth, and testing.</div></div></a>
+        <a class="rc" href="https://www.youtube.com/watch?v=0M8AYU_hPas" target="_blank"><div class="rc-ico">▶️</div><div><div class="rc-name">NestJS Crash Course (Traversy)</div><div class="rc-desc">2h YouTube intro — good for the big picture before diving into docs.</div></div></a>
+        <a class="rc" href="https://www.youtube.com/watch?v=p1yAXc0kRD8" target="_blank"><div class="rc-ico">▶️</div><div><div class="rc-name">NestJS + TypeORM full project (YT)</div><div class="rc-desc">Practical walkthrough building a REST API — great companion to the docs.</div></div></a>
+        <a class="rc" href="https://typeorm.io" target="_blank"><div class="rc-ico">🗄️</div><div><div class="rc-name">TypeORM documentation</div><div class="rc-desc">Read in order: Entities → Relations → Migrations. The Migrations section is critical.</div></div></a>
+        <a class="rc" href="https://docs.nestjs.com/security/authentication" target="_blank"><div class="rc-ico">🔐</div><div><div class="rc-name">NestJS Auth guide (official)</div><div class="rc-desc">Step-by-step Passport + JWT walkthrough. Follow it closely for the auth module.</div></div></a>
+        <a class="rc" href="https://jwt.io/introduction" target="_blank"><div class="rc-ico">🔑</div><div><div class="rc-name">JWT introduction — jwt.io</div><div class="rc-desc">Understand the token structure and claims before implementing authentication.</div></div></a>
+        <a class="rc" href="https://docs.docker.com/compose/gettingstarted/" target="_blank"><div class="rc-ico">🐳</div><div><div class="rc-name">Docker Compose quickstart</div><div class="rc-desc">Official guide — enough to get a Postgres container running with a healthcheck.</div></div></a>
+        <a class="rc" href="https://docs.nestjs.com/openapi/introduction" target="_blank"><div class="rc-ico">📋</div><div><div class="rc-name">NestJS Swagger / OpenAPI guide</div><div class="rc-desc">How to set up Swagger UI and annotate controllers and DTOs.</div></div></a>
+        <a class="rc" href="https://www.postgresql.org/docs/current/tutorial.html" target="_blank"><div class="rc-ico">🐘</div><div><div class="rc-name">PostgreSQL tutorial (official)</div><div class="rc-desc">Chapters 1–4. Helps understand what TypeORM generates under the hood.</div></div></a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══════════ PHASE 2 ══════════ -->
+  <div class="phase" id="ph2">
+
+    <div class="lock">
+      <div class="lock-ico">⚠️</div>
+      <div class="lock-txt"><strong>Start Phase 2 only after Phase 1 is complete.</strong> All endpoints must work, the seed must run, and everything must be testable via Swagger. The frontend is an extension — not a parallel track.</div>
+    </div>
+
+    <div class="hero">
+      <div class="eyebrow">Phase 2 · Extension milestone</div>
+      <h1>Frontend — Angular SPA</h1>
+      <p class="hero-desc">Build a functional interface on top of the API you already shipped. Focus on wiring Angular correctly to the backend, handling all error cases gracefully, and keeping every type strict. The UI doesn't need to be polished — it needs to be correct.</p>
+      <div class="tags">
+        <span class="tag tng">Angular 17+</span>
+        <span class="tag tgray">HttpClient</span>
+        <span class="tag tgray">ReactiveFormsModule</span>
+        <span class="tag tgray">Angular Router</span>
+        <span class="tag tdocker">Docker (optional)</span>
+        <span class="tag tgray">RxJS</span>
+      </div>
+      <div class="meta">
+        <div class="mi">⏱ <strong>2–3 days</strong></div>
+        <div class="mi">🚦 <strong>Requires Phase 1 complete</strong></div>
+      </div>
+      <div class="hbar"><div class="hbar-fill" id="hbf-fe"></div></div>
+      <div class="hbar-lbl" id="hbl-fe">0 of 0 steps completed</div>
+    </div>
+
+    <div class="legend">
+      <div class="leg"><span class="badge bmust">must</span> required</div>
+      <div class="leg"><span class="badge bnice">nice</span> strongly recommended</div>
+      <div class="leg"><span class="badge bbonus">bonus</span> above expectations</div>
+    </div>
+
+    <!-- Step 5 -->
+    <div class="ms open" id="ms5">
+      <div class="ms-hd" onclick="tms('ms5')">
+        <div class="ms-l">
+          <div class="num nfe">5</div>
+          <div>
+            <div class="ms-title">Project setup &amp; auth flow</div>
+            <div class="ms-sub">Login page · AuthGuard · HTTP Interceptor</div>
+          </div>
+        </div>
+        <div class="ms-r"><span class="ms-cnt" id="c-ms5">0 / 0</span><span class="chev">▾</span></div>
+      </div>
+      <div class="ms-body">
+        <div class="ctx">
+          <div class="ctx-lbl">Goal</div>
+          <p>The reviewer opens the app, sees a login form, signs in, and lands on the employee list. Every API request carries the JWT automatically — no component ever manually sets a header.</p>
+        </div>
+        <div class="item" onclick="tog(this)" data-ms="ms5"><div class="cb">✓</div><div class="ibody"><div class="itxt">Generate with Angular CLI, configure lazy-loaded feature modules and routing</div></div><span class="badge bmust">must</span></div>
+        <div class="item" onclick="tog(this)" data-ms="ms5"><div class="cb">✓</div><div class="ibody"><div class="itxt">Login page — ReactiveForm (email + password), calls <code>POST /auth/login</code>, stores JWT in localStorage</div><div class="inote">Redirect to <code>/employees</code> on success; show an inline error message on 401</div></div><span class="badge bmust">must</span></div>
+        <div class="item" onclick="tog(this)" data-ms="ms5"><div class="cb">✓</div><div class="ibody"><div class="itxt"><code>AuthGuard</code> — redirects unauthenticated users to <code>/login</code> on any protected route</div></div><span class="badge bmust">must</span></div>
+        <div class="item" onclick="tog(this)" data-ms="ms5"><div class="cb">✓</div><div class="ibody"><div class="itxt">HTTP Interceptor — attaches <code>Authorization: Bearer ...</code> to every outgoing request</div></div><span class="badge bmust">must</span></div>
+        <div class="item" onclick="tog(this)" data-ms="ms5"><div class="cb">✓</div><div class="ibody"><div class="itxt">Logout button — clears token from storage, redirects to <code>/login</code></div></div><span class="badge bmust">must</span></div>
+      </div>
+    </div>
+
+    <!-- Step 6 -->
+    <div class="ms" id="ms6">
+      <div class="ms-hd" onclick="tms('ms6')">
+        <div class="ms-l">
+          <div class="num nfe">6</div>
+          <div>
+            <div class="ms-title">Employee list &amp; forms</div>
+            <div class="ms-sub">Table · search · filter · create / edit / deactivate</div>
+          </div>
+        </div>
+        <div class="ms-r"><span class="ms-cnt" id="c-ms6">0 / 0</span><span class="chev">▾</span></div>
+      </div>
+      <div class="ms-body">
+        <div class="item" onclick="tog(this)" data-ms="ms6"><div class="cb">✓</div><div class="ibody"><div class="itxt">Employee table — columns: name, email, department, role, status badge, hire date</div></div><span class="badge bmust">must</span></div>
+        <div class="item" onclick="tog(this)" data-ms="ms6"><div class="cb">✓</div><div class="ibody"><div class="itxt">Search by name / email (300ms debounce) and filter by department via <code>&lt;select&gt;</code></div><div class="inote">Use <code>debounceTime</code> + <code>switchMap</code> from RxJS — no request flooding</div></div><span class="badge bmust">must</span></div>
+        <div class="item" onclick="tog(this)" data-ms="ms6"><div class="cb">✓</div><div class="ibody"><div class="itxt">Create / edit form (ReactiveForm) with client-side validation matching backend rules</div><div class="inote">Validation errors shown inline under each field — not just an alert popup</div></div><span class="badge bmust">must</span></div>
+        <div class="item" onclick="tog(this)" data-ms="ms6"><div class="cb">✓</div><div class="ibody"><div class="itxt">Deactivate employee — confirm dialog before sending the <code>PATCH</code> request</div></div><span class="badge bmust">must</span></div>
+        <div class="item" onclick="tog(this)" data-ms="ms6"><div class="cb">✓</div><div class="ibody"><div class="itxt">All API responses typed as TypeScript interfaces: Employee, Department, Role, PaginatedResponse&lt;T&gt;</div><div class="inote">No <code>any</code> types. Enable <code>"strict": true</code> in tsconfig.json</div></div><span class="badge bmust">must</span></div>
+        <div class="item" onclick="tog(this)" data-ms="ms6"><div class="cb">✓</div><div class="ibody"><div class="itxt">Toast / snackbar feedback for every mutation and for API errors</div><div class="inote">No silent failures — every action must produce visible confirmation</div></div><span class="badge bnice">nice</span></div>
+        <div class="item" onclick="tog(this)" data-ms="ms6"><div class="cb">✓</div><div class="ibody"><div class="itxt">Loading skeleton or spinner while data is fetching</div></div><span class="badge bnice">nice</span></div>
+        <div class="item" onclick="tog(this)" data-ms="ms6"><div class="cb">✓</div><div class="ibody"><div class="itxt">Pagination controls wired to backend <code>?page=&amp;limit=</code> params</div></div><span class="badge bnice">nice</span></div>
+      </div>
+    </div>
+
+    <!-- Step 7 -->
+    <div class="ms" id="ms7">
+      <div class="ms-hd" onclick="tms('ms7')">
+        <div class="ms-l">
+          <div class="num nfe">7</div>
+          <div>
+            <div class="ms-title">Department view &amp; dashboard</div>
+            <div class="ms-sub">Stats · department detail page · optional chart</div>
+          </div>
+        </div>
+        <div class="ms-r"><span class="ms-cnt" id="c-ms7">0 / 0</span><span class="chev">▾</span></div>
+      </div>
+      <div class="ms-body">
+        <div class="item" onclick="tog(this)" data-ms="ms7"><div class="cb">✓</div><div class="ibody"><div class="itxt">Department detail page — employee list, active count, average salary</div></div><span class="badge bnice">nice</span></div>
+        <div class="item" onclick="tog(this)" data-ms="ms7"><div class="cb">✓</div><div class="ibody"><div class="itxt">Home dashboard — stat cards: total employees, active count, departments, avg salary</div></div><span class="badge bbonus">bonus</span></div>
+        <div class="item" onclick="tog(this)" data-ms="ms7"><div class="cb">✓</div><div class="ibody"><div class="itxt">Bar or pie chart — employees by department (ng2-charts or ngx-charts)</div></div><span class="badge bbonus">bonus</span></div>
+      </div>
+    </div>
+
+    <div class="res-wrap">
+      <div class="res-lbl">📚 Learning resources — Phase 2</div>
+      <div class="res-grid">
+        <a class="rc" href="https://angular.dev/tutorials" target="_blank"><div class="rc-ico">📖</div><div><div class="rc-name">Angular.dev — official tutorials</div><div class="rc-desc">New interactive intro — much better than old angular.io. Start here.</div></div></a>
+        <a class="rc" href="https://www.udemy.com/course/the-complete-guide-to-angular-2/" target="_blank"><div class="rc-ico">🎓</div><div><div class="rc-name">Angular — Complete Guide (Udemy)</div><div class="rc-desc">Maximilian Schwarzmüller — the most comprehensive Angular course, always updated.</div></div></a>
+        <a class="rc" href="https://www.youtube.com/watch?v=3dHNOWTI7H8" target="_blank"><div class="rc-ico">▶️</div><div><div class="rc-name">Angular Full Course (freeCodeCamp)</div><div class="rc-desc">18h comprehensive — routing, forms, HttpClient, services, RxJS.</div></div></a>
+        <a class="rc" href="https://angular.dev/guide/forms/reactive-forms" target="_blank"><div class="rc-ico">📋</div><div><div class="rc-name">Reactive forms — official guide</div><div class="rc-desc">FormBuilder, Validators, FormArray — read before building any form.</div></div></a>
+        <a class="rc" href="https://angular.dev/guide/http/interceptors" target="_blank"><div class="rc-ico">🔌</div><div><div class="rc-name">HTTP Interceptors — official guide</div><div class="rc-desc">How to attach JWT to all requests. Key concept for the auth flow.</div></div></a>
+        <a class="rc" href="https://rxjs.dev/guide/operators" target="_blank"><div class="rc-ico">⚡</div><div><div class="rc-name">RxJS operators reference</div><div class="rc-desc">Focus on: debounceTime, switchMap, catchError, takeUntilDestroyed.</div></div></a>
+        <a class="rc" href="https://angular.dev/guide/routing" target="_blank"><div class="rc-ico">🗺️</div><div><div class="rc-name">Angular Router guide</div><div class="rc-desc">Lazy loading, guards, route parameters — everything for this app.</div></div></a>
+        <a class="rc" href="https://www.youtube.com/watch?v=0eWrpsCLMJQ" target="_blank"><div class="rc-ico">▶️</div><div><div class="rc-name">Angular + NestJS integration (YT)</div><div class="rc-desc">Practical walkthrough connecting Angular frontend to a NestJS backend.</div></div></a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══════════ PROGRESS ══════════ -->
+  <div class="phase" id="ph3">
+
+    <div class="hero" style="margin-bottom:18px">
+      <div class="eyebrow">Tracker</div>
+      <h1>Overall progress</h1>
+      <p class="hero-desc">Mark items in Phase 1 and Phase 2 — bars update here automatically. Phase 1 bars should be fully green before any Phase 2 work begins.</p>
+    </div>
+
+    <div class="prog-card">
+      <div>
+        <div class="prog-big" id="sc-pct">0%</div>
+        <div class="prog-lbl">overall complete</div>
+      </div>
+      <div class="prog-bars">
+        <div class="br"><span class="br-name">1 · Setup &amp; DB</span><div class="br-track"><div class="br-fill" id="bf1" style="width:0%"></div></div><span class="br-val" id="bv1">0%</span></div>
+        <div class="br"><span class="br-name">2 · CRUD API</span><div class="br-track"><div class="br-fill" id="bf2" style="width:0%"></div></div><span class="br-val" id="bv2">0%</span></div>
+        <div class="br"><span class="br-name">3 · Auth (BE)</span><div class="br-track"><div class="br-fill" id="bf3" style="width:0%"></div></div><span class="br-val" id="bv3">0%</span></div>
+        <div class="br"><span class="br-name">4 · Docs &amp; tests</span><div class="br-track"><div class="br-fill" id="bf4" style="width:0%"></div></div><span class="br-val" id="bv4">0%</span></div>
+        <div class="br"><span class="br-name">5 · Auth (FE)</span><div class="br-track"><div class="br-fill" id="bf5" style="width:0%"></div></div><span class="br-val" id="bv5">0%</span></div>
+        <div class="br"><span class="br-name">6 · Employee UI</span><div class="br-track"><div class="br-fill" id="bf6" style="width:0%"></div></div><span class="br-val" id="bv6">0%</span></div>
+        <div class="br"><span class="br-name">7 · Dashboard</span><div class="br-track"><div class="br-fill" id="bf7" style="width:0%"></div></div><span class="br-val" id="bv7">0%</span></div>
+      </div>
+    </div>
+
+    <div class="res-wrap">
+      <div class="res-lbl">🔗 General resources</div>
+      <div class="res-grid">
+        <a class="rc" href="https://roadmap.sh/nodejs" target="_blank"><div class="rc-ico">🗺️</div><div><div class="rc-name">Node.js roadmap</div><div class="rc-desc">roadmap.sh — visual overview of the backend ecosystem.</div></div></a>
+        <a class="rc" href="https://roadmap.sh/angular" target="_blank"><div class="rc-ico">🗺️</div><div><div class="rc-name">Angular roadmap</div><div class="rc-desc">roadmap.sh — see how Angular concepts connect.</div></div></a>
+        <a class="rc" href="https://conventionalcommits.org" target="_blank"><div class="rc-ico">📝</div><div><div class="rc-name">Conventional Commits</div><div class="rc-desc">Meaningful git messages: feat:, fix:, chore:, refactor:.</div></div></a>
+        <a class="rc" href="https://www.postman.com/downloads/" target="_blank"><div class="rc-ico">🚀</div><div><div class="rc-name">Postman</div><div class="rc-desc">Test your API throughout Phase 1 before writing any Angular code.</div></div></a>
+        <a class="rc" href="https://www.typescriptlang.org/docs/handbook/2/types-from-types.html" target="_blank"><div class="rc-ico">🔷</div><div><div class="rc-name">TypeScript handbook</div><div class="rc-desc">Generics, utility types, strict mode — needed in both phases.</div></div></a>
+        <a class="rc" href="https://dbdiagram.io" target="_blank"><div class="rc-ico">📐</div><div><div class="rc-name">dbdiagram.io</div><div class="rc-desc">Sketch your DB schema visually before writing entities.</div></div></a>
+      </div>
+    </div>
+
+    <button class="reset-btn" onclick="resetAll()">↺ Reset all checkboxes</button>
+
+  </div>
+
+</div>
+
+<script>
+function showPhase(id,btn){
+  document.querySelectorAll('.phase').forEach(p=>p.classList.remove('visible'));
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('visible');
+  btn.classList.add('active');
+}
+function tms(id){document.getElementById(id).classList.toggle('open')}
+function tog(el){el.classList.toggle('done');update()}
+function update(){
+  const ids=['ms1','ms2','ms3','ms4','ms5','ms6','ms7'];
+  let tot=0,dn=0,beD=0,beT=0,feD=0,feT=0;
+  ids.forEach((id,i)=>{
+    const n=i+1;
+    const items=document.querySelectorAll(`.item[data-ms="${id}"]`);
+    const d=[...items].filter(x=>x.classList.contains('done')).length;
+    const a=items.length;
+    const pct=a?Math.round(d/a*100):0;
+    const ce=document.getElementById(`c-${id}`);
+    if(ce)ce.textContent=`${d} / ${a}`;
+    const bf=document.getElementById(`bf${n}`);
+    if(bf)bf.style.width=pct+'%';
+    const bv=document.getElementById(`bv${n}`);
+    if(bv)bv.textContent=pct+'%';
+    tot+=a;dn+=d;
+    if(n<=4){beD+=d;beT+=a;}else{feD+=d;feT+=a;}
+  });
+  const g=tot?Math.round(dn/tot*100):0;
+  document.getElementById('sc-pct').textContent=g+'%';
+  document.getElementById('hdr-prog').textContent=`${dn} / ${tot} done`;
+  const bePct=beT?Math.round(beD/beT*100):0;
+  const fePct=feT?Math.round(feD/feT*100):0;
+  const hbBe=document.getElementById('hbf-be');if(hbBe)hbBe.style.width=bePct+'%';
+  const hlBe=document.getElementById('hbl-be');if(hlBe)hlBe.textContent=`${beD} of ${beT} steps completed`;
+  const hbFe=document.getElementById('hbf-fe');if(hbFe)hbFe.style.width=fePct+'%';
+  const hlFe=document.getElementById('hbl-fe');if(hlFe)hlFe.textContent=`${feD} of ${feT} steps completed`;
+}
+function resetAll(){document.querySelectorAll('.item.done').forEach(el=>el.classList.remove('done'));update()}
+update();
+</script>
+</body>
+</html>
