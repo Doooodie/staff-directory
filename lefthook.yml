@@ -1,0 +1,12 @@
+pre-commit:
+  parallel: true
+  jobs:
+    - name: backend-eslint
+      root: backend/
+      run: npx eslint --fix {staged_files}
+      stage_fixed: true
+
+    - name: backend-prettier
+      root: backend/
+      run: npx prettier --ignore-unknown --write {staged_files}
+      stage_fixed: true
