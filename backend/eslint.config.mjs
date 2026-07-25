@@ -1,18 +1,14 @@
-// @ts-check
 import path from 'node:path';
 
 import { includeIgnoreFile } from '@eslint/config-helpers';
-import js from '@eslint/js';
 import vitest from '@vitest/eslint-plugin';
 import { defineConfig } from 'eslint/config';
 import { configs, plugins, rules } from 'eslint-config-airbnb-extended';
-import { rules as prettierConfigRules } from 'eslint-config-prettier';
-import prettierPlugin from 'eslint-plugin-prettier';
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 
 const gitignorePath = path.resolve('.', '.gitignore');
 
 const jsConfig = defineConfig([
-  { name: 'js/config', ...js.configs.recommended },
   plugins.stylistic,
   plugins.importX,
   ...configs.base.recommended,
@@ -35,20 +31,6 @@ const typescriptConfig = defineConfig([
   rules.typescript.typescriptEslintStrict,
 ]);
 
-const prettierConfig = defineConfig([
-  {
-    name: 'prettier/plugin/config',
-    plugins: { prettier: prettierPlugin },
-  },
-  {
-    name: 'prettier/config',
-    rules: {
-      ...prettierConfigRules,
-      'prettier/prettier': ['error', { endOfLine: 'auto' }],
-    },
-  },
-]);
-
 const customRulesConfig = defineConfig({
   ignores: ['eslint.config.mjs'],
   rules: {
@@ -67,6 +49,6 @@ export default defineConfig([
   ...nodeConfig,
   ...vitestConfig,
   ...typescriptConfig,
-  ...prettierConfig,
+  eslintPluginPrettierRecommended,
   ...customRulesConfig,
 ]);

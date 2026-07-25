@@ -1,10 +1,7 @@
-import path from 'node:path';
-
 import swc from 'unplugin-swc';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
-  test: { globals: true, root: './' },
-  resolve: { alias: { src: path.resolve(__dirname, './src') } },
+  test: { globals: true },
   plugins: [swc.vite({ module: { type: 'es6' } })],
 });

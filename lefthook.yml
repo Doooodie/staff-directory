@@ -3,6 +3,7 @@ pre-commit:
   jobs:
     - name: backend-eslint
       root: backend/
+      glob: "backend/**/*.{ts,mjs}"
       run: npx eslint --fix {staged_files}
       stage_fixed: true
 
@@ -10,3 +11,14 @@ pre-commit:
       root: backend/
       run: npx prettier --ignore-unknown --write {staged_files}
       stage_fixed: true
+
+    - name: backend-typecheck
+      root: backend/
+      glob: "backend/**/*.{ts,mjs}"
+      run: npm run type-check
+
+pre-push:
+  jobs:
+    - name: backend-test
+      root: backend/
+      run: npm test

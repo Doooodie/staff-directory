@@ -1,4 +1,5 @@
 # Backend Functional Requirements
+
 ## Staff Directory — NestJS + PostgreSQL + Docker
 
 ---
@@ -17,17 +18,18 @@ The backend is a REST API that manages a company's employee directory. It is the
 
 The file `docker-compose.yml` must define the following services:
 
-| Service | Image | Purpose |
-|---|---|---|
-| `postgres` | `postgres:15-alpine` | Primary database |
-| `pgadmin` *(optional)* | `dpage/pgadmin4` | DB GUI for debugging |
+| Service                | Image                | Purpose              |
+| ---------------------- | -------------------- | -------------------- |
+| `postgres`             | `postgres:15-alpine` | Primary database     |
+| `pgadmin` _(optional)_ | `dpage/pgadmin4`     | DB GUI for debugging |
 
 **Requirements:**
+
 - The `postgres` service must have a named volume (e.g. `pgdata`) to persist data across container restarts.
 - A healthcheck must be defined on the `postgres` service:
   ```yaml
   healthcheck:
-    test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+    test: ['CMD-SHELL', 'pg_isready -U ${DB_USER} -d ${DB_NAME}']
     interval: 5s
     timeout: 5s
     retries: 5
@@ -50,6 +52,7 @@ JWT_EXPIRES_IN=7d
 ```
 
 Rules:
+
 - `.env` must be added to `.gitignore`.
 - All variables must be read through NestJS `ConfigModule` (`@nestjs/config`) — never hardcoded.
 - `TypeOrmModule.forRootAsync()` must use `ConfigService` to build the database configuration at runtime.
@@ -71,60 +74,63 @@ migrationsRun: false,
 
 Stores authentication credentials. Not exposed directly in the employee directory.
 
-| Field | Type | Constraints |
-|---|---|---|
-| `id` | `uuid` | PK, generated automatically |
-| `email` | `varchar(255)` | UNIQUE, NOT NULL |
-| `password` | `varchar(255)` | NOT NULL — bcrypt hash, never plain text |
-| `role` | `enum('USER','ADMIN')` | NOT NULL, DEFAULT `'USER'` |
-| `createdAt` | `timestamptz` | NOT NULL, auto-set on insert |
-| `updatedAt` | `timestamptz` | NOT NULL, auto-updated |
+| Field       | Type                   | Constraints                              |
+| ----------- | ---------------------- | ---------------------------------------- |
+| `id`        | `uuid`                 | PK, generated automatically              |
+| `email`     | `varchar(255)`         | UNIQUE, NOT NULL                         |
+| `password`  | `varchar(255)`         | NOT NULL — bcrypt hash, never plain text |
+| `role`      | `enum('USER','ADMIN')` | NOT NULL, DEFAULT `'USER'`               |
+| `createdAt` | `timestamptz`          | NOT NULL, auto-set on insert             |
+| `updatedAt` | `timestamptz`          | NOT NULL, auto-updated                   |
 
 ### 3.2 Department
 
-| Field | Type | Constraints |
-|---|---|---|
-| `id` | `uuid` | PK, generated automatically |
-| `name` | `varchar(100)` | UNIQUE, NOT NULL |
-| `description` | `text` | nullable |
-| `createdAt` | `timestamptz` | NOT NULL, auto-set |
-| `updatedAt` | `timestamptz` | NOT NULL, auto-updated |
+| Field         | Type           | Constraints                 |
+| ------------- | -------------- | --------------------------- |
+| `id`          | `uuid`         | PK, generated automatically |
+| `name`        | `varchar(100)` | UNIQUE, NOT NULL            |
+| `description` | `text`         | nullable                    |
+| `createdAt`   | `timestamptz`  | NOT NULL, auto-set          |
+| `updatedAt`   | `timestamptz`  | NOT NULL, auto-updated      |
 
 **Relations:**
+
 - One Department → many Employees (`@OneToMany` on Department side)
 
 ### 3.3 Role
 
-| Field | Type | Constraints |
-|---|---|---|
-| `id` | `uuid` | PK, generated automatically |
-| `title` | `varchar(100)` | UNIQUE, NOT NULL |
-| `level` | `enum('JUNIOR','MID','SENIOR','LEAD','MANAGER')` | NOT NULL |
-| `createdAt` | `timestamptz` | NOT NULL, auto-set |
-| `updatedAt` | `timestamptz` | NOT NULL, auto-updated |
+| Field       | Type                                             | Constraints                 |
+| ----------- | ------------------------------------------------ | --------------------------- |
+| `id`        | `uuid`                                           | PK, generated automatically |
+| `title`     | `varchar(100)`                                   | UNIQUE, NOT NULL            |
+| `level`     | `enum('JUNIOR','MID','SENIOR','LEAD','MANAGER')` | NOT NULL                    |
+| `createdAt` | `timestamptz`                                    | NOT NULL, auto-set          |
+| `updatedAt` | `timestamptz`                                    | NOT NULL, auto-updated      |
 
 **Relations:**
+
 - One Role → many Employees (`@OneToMany` on Role side)
 
 ### 3.4 Employee
 
 The core entity of the application.
 
-| Field | Type | Constraints |
-|---|---|---|
-| `id` | `uuid` | PK, generated automatically |
-| `firstName` | `varchar(100)` | NOT NULL |
-| `lastName` | `varchar(100)` | NOT NULL |
-| `email` | `varchar(255)` | UNIQUE, NOT NULL |
-| `hireDate` | `date` | NOT NULL |
-| `salary` | `decimal(12,2)` | NOT NULL, must be > 0 |
-| `isActive` | `boolean` | NOT NULL, DEFAULT `true` |
-| `departmentId` | `uuid` (FK) | NOT NULL, references `department.id` |
-| `roleId` | `uuid` (FK) | NOT NULL, references `role.id` |
-| `createdAt` | `timestamptz` | NOT NULL, auto-set |
-| `updatedAt` | `timestamptz` | NOT NULL, auto-updated |
+| Field          | Type            | Constraints                          |
+| -------------- | --------------- | ------------------------------------ |
+| `id`           | `uuid`          | PK, generated automatically          |
+| `firstName`    | `varchar(100)`  | NOT NULL                             |
+| `lastName`     | `varchar(100)`  | NOT NULL                             |
+| `email`        | `varchar(255)`  | UNIQUE, NOT NULL                     |
+| `hireDate`     | `date`          | NOT NULL                             |
+| `salary`       | `decimal(12,2)` | NOT NULL, must be > 0                |
+| `isActive`     | `boolean`       | NOT NULL, DEFAULT `true`             |
+| `departmentId` | `uuid` (FK)     | NOT NULL, references `department.id` |
+| `roleId`       | `uuid` (FK)     | NOT NULL, references `role.id`       |
+| `createdAt`    | `timestamptz`   | NOT NULL, auto-set                   |
+| `updatedAt`    | `timestamptz`   | NOT NULL, auto-updated               |
 
 **Relations:**
+
 - Employee `@ManyToOne` → Department
 - Employee `@ManyToOne` → Role
 
@@ -143,6 +149,7 @@ No authentication required on these routes.
 Creates a new user account.
 
 **Request body:**
+
 ```json
 {
   "email": "admin@company.com",
@@ -152,11 +159,13 @@ Creates a new user account.
 ```
 
 **Validation:**
+
 - `email` — required, must be a valid email format
 - `password` — required, min length 8, must contain at least one letter and one number
 - `role` — optional, enum `USER | ADMIN`, defaults to `USER`
 
 **Responses:**
+
 - `201 Created` — returns the created user object **without** the `password` field
 - `409 Conflict` — if the email is already registered
 - `400 Bad Request` — validation errors
@@ -166,6 +175,7 @@ Creates a new user account.
 Authenticates a user and returns a JWT.
 
 **Request body:**
+
 ```json
 {
   "email": "admin@company.com",
@@ -174,10 +184,12 @@ Authenticates a user and returns a JWT.
 ```
 
 **Validation:**
+
 - `email` — required, valid email
 - `password` — required, non-empty string
 
 **Responses:**
+
 - `200 OK` — `{ accessToken: string, user: { id, email, role } }`
 - `401 Unauthorized` — invalid credentials
 
@@ -193,19 +205,20 @@ Returns a paginated list of employees.
 
 **Query parameters:**
 
-| Param | Type | Required | Description |
-|---|---|---|---|
-| `page` | number | no | Page number, default `1` |
-| `limit` | number | no | Items per page, default `20`, max `100` |
-| `search` | string | no | Partial match on `firstName`, `lastName`, or `email` (case-insensitive) |
-| `departmentId` | uuid | no | Filter by department |
-| `roleId` | uuid | no | Filter by role |
-| `isActive` | boolean | no | Filter by active status, default returns all |
+| Param          | Type    | Required | Description                                                             |
+| -------------- | ------- | -------- | ----------------------------------------------------------------------- |
+| `page`         | number  | no       | Page number, default `1`                                                |
+| `limit`        | number  | no       | Items per page, default `20`, max `100`                                 |
+| `search`       | string  | no       | Partial match on `firstName`, `lastName`, or `email` (case-insensitive) |
+| `departmentId` | uuid    | no       | Filter by department                                                    |
+| `roleId`       | uuid    | no       | Filter by role                                                          |
+| `isActive`     | boolean | no       | Filter by active status, default returns all                            |
 
 **Response `200 OK`:**
+
 ```json
 {
-  "data": [ /* Employee[] with department and role nested */ ],
+  "data": [/* Employee[] with department and role nested */],
   "total": 87,
   "page": 1,
   "limit": 20,
@@ -220,6 +233,7 @@ Each employee in `data` must include nested `department` (id, name) and `role` (
 Returns aggregate statistics. Must be defined **before** `GET /employees/:id` in the controller to avoid routing conflicts.
 
 **Response `200 OK`:**
+
 ```json
 {
   "total": 87,
@@ -231,7 +245,7 @@ Returns aggregate statistics. Must be defined **before** `GET /employees/:id` in
       "departmentName": "Engineering",
       "count": 30,
       "activeCount": 27,
-      "averageSalary": 5200.00
+      "averageSalary": 5200.0
     }
   ]
 }
@@ -242,6 +256,7 @@ Returns aggregate statistics. Must be defined **before** `GET /employees/:id` in
 Returns a single employee with nested department and role.
 
 **Responses:**
+
 - `200 OK` — full employee object
 - `404 Not Found` — employee does not exist
 
@@ -250,13 +265,14 @@ Returns a single employee with nested department and role.
 Creates a new employee.
 
 **Request body:**
+
 ```json
 {
   "firstName": "Anna",
   "lastName": "Kowalski",
   "email": "anna.kowalski@company.com",
   "hireDate": "2024-03-15",
-  "salary": 4800.00,
+  "salary": 4800.0,
   "departmentId": "uuid",
   "roleId": "uuid"
 }
@@ -264,17 +280,18 @@ Creates a new employee.
 
 **Validation:**
 
-| Field | Rules |
-|---|---|
-| `firstName` | required, string, 1–100 chars, no leading/trailing whitespace |
-| `lastName` | required, string, 1–100 chars, no leading/trailing whitespace |
-| `email` | required, valid email, must be unique across all employees |
-| `hireDate` | required, valid ISO date string (`YYYY-MM-DD`), must not be in the future |
-| `salary` | required, positive number, min `0.01`, max `999999.99` |
-| `departmentId` | required, valid UUID, must reference an existing department |
-| `roleId` | required, valid UUID, must reference an existing role |
+| Field          | Rules                                                                     |
+| -------------- | ------------------------------------------------------------------------- |
+| `firstName`    | required, string, 1–100 chars, no leading/trailing whitespace             |
+| `lastName`     | required, string, 1–100 chars, no leading/trailing whitespace             |
+| `email`        | required, valid email, must be unique across all employees                |
+| `hireDate`     | required, valid ISO date string (`YYYY-MM-DD`), must not be in the future |
+| `salary`       | required, positive number, min `0.01`, max `999999.99`                    |
+| `departmentId` | required, valid UUID, must reference an existing department               |
+| `roleId`       | required, valid UUID, must reference an existing role                     |
 
 **Responses:**
+
 - `201 Created` — full employee object with nested relations
 - `409 Conflict` — email already exists
 - `404 Not Found` — departmentId or roleId not found
@@ -287,6 +304,7 @@ Partially updates an employee. All fields are optional — only send what change
 **Request body:** same fields as `POST`, all optional.
 
 **Responses:**
+
 - `200 OK` — updated employee object
 - `404 Not Found`
 - `409 Conflict` — new email already in use by another employee
@@ -297,6 +315,7 @@ Partially updates an employee. All fields are optional — only send what change
 Soft-deletes an employee by setting `isActive = false`.
 
 **Responses:**
+
 - `200 OK` — `{ message: "Employee deactivated successfully", id: "uuid" }`
 - `404 Not Found`
 
@@ -311,6 +330,7 @@ All routes require JWT.
 Returns all departments with the count of active employees.
 
 **Response `200 OK`:**
+
 ```json
 [
   {
@@ -335,11 +355,13 @@ Returns a single department with its employees list.
 #### `POST /departments`
 
 **Request body:**
+
 ```json
 { "name": "Engineering", "description": "Optional text" }
 ```
 
 **Validation:**
+
 - `name` — required, string, 1–100 chars, must be unique
 - `description` — optional, string, max 500 chars
 
@@ -372,11 +394,13 @@ Returns all roles.
 #### `POST /roles`
 
 **Request body:**
+
 ```json
 { "title": "Senior Frontend Developer", "level": "SENIOR" }
 ```
 
 **Validation:**
+
 - `title` — required, string, 1–100 chars, unique
 - `level` — required, enum: `JUNIOR | MID | SENIOR | LEAD | MANAGER`
 
@@ -406,11 +430,11 @@ Hard delete. Must fail with `409 Conflict` if any employees currently use this r
 
 If implemented, the following write operations require the `ADMIN` role:
 
-| Method | Route |
-|---|---|
-| POST / PATCH / DELETE | `/employees/*` |
+| Method                | Route            |
+| --------------------- | ---------------- |
+| POST / PATCH / DELETE | `/employees/*`   |
 | POST / PATCH / DELETE | `/departments/*` |
-| POST / PATCH / DELETE | `/roles/*` |
+| POST / PATCH / DELETE | `/roles/*`       |
 
 `GET` requests are accessible to all authenticated users regardless of role.
 
@@ -449,12 +473,15 @@ When `class-validator` rejects input, the response must include field-level erro
 ```
 
 Enable this with the global `ValidationPipe`:
+
 ```typescript
-app.useGlobalPipes(new ValidationPipe({
-  whitelist: true,
-  forbidNonWhitelisted: true,
-  transform: true,
-}));
+app.useGlobalPipes(
+  new ValidationPipe({
+    whitelist: true,
+    forbidNonWhitelisted: true,
+    transform: true,
+  }),
+);
 ```
 
 ---
@@ -479,12 +506,12 @@ app.useGlobalPipes(new ValidationPipe({
 
 The seed script (`src/seed.ts`, run via `npm run seed`) must create:
 
-| Entity | Count | Notes |
-|---|---|---|
-| Departments | 3 | e.g. Engineering, Marketing, Operations |
-| Roles | 5 | One per level: Junior Dev, Mid Dev, Senior Dev, Lead, Manager |
-| Users | 2 | One `ADMIN` (admin@company.com / Admin123!), one `USER` |
-| Employees | 20 | Realistic names, mix of departments and roles, realistic salaries |
+| Entity      | Count | Notes                                                             |
+| ----------- | ----- | ----------------------------------------------------------------- |
+| Departments | 3     | e.g. Engineering, Marketing, Operations                           |
+| Roles       | 5     | One per level: Junior Dev, Mid Dev, Senior Dev, Lead, Manager     |
+| Users       | 2     | One `ADMIN` (admin@company.com / Admin123!), one `USER`           |
+| Employees   | 20    | Realistic names, mix of departments and roles, realistic salaries |
 
 The seed must be **idempotent** — running it twice must not create duplicate records (use `upsert` or check for existing records before inserting).
 
@@ -504,6 +531,7 @@ const config = new DocumentBuilder()
 ```
 
 **Requirements for each controller:**
+
 - `@ApiTags('employees')` — groups routes in the sidebar
 - `@ApiOperation({ summary: '...' })` — describes what the route does
 - `@ApiResponse({ status: 200, ... })` — documents all response codes
@@ -524,6 +552,7 @@ At minimum, one service must have Jest unit tests with a mocked TypeORM reposito
 Recommended: `EmployeesService`
 
 Test cases to cover:
+
 - `create()` — success path, returns the created employee
 - `create()` — throws `ConflictException` when email already exists
 - `findOne()` — throws `NotFoundException` when ID does not exist

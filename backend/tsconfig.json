@@ -23,6 +23,9 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "strictBindCallApply": false,
-    "noFallthroughCasesInSwitch": false
-  }
+    "noFallthroughCasesInSwitch": false,
+    "allowJs": true,
+    "checkJs": true
+  },
+  "include": ["**/*.ts", "**/*.mjs"]
 }
