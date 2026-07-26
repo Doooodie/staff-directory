@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DepartmentModule } from './department/department.module';
-import { Department } from './department/entities/department.entity';
+import { RoleModule } from './role/role.module';
 
 @Module({
   imports: [
@@ -22,12 +22,13 @@ import { Department } from './department/entities/department.entity';
         username: configService.get('DB_USER'),
         password: configService.get('DB_PASS'),
         database: configService.get('DB_NAME'),
-        entities: [Department],
+        autoLoadEntities: true,
         synchronize: false,
         migrationsRun: false,
       }),
     }),
     DepartmentModule,
+    RoleModule,
   ],
   controllers: [AppController],
   providers: [AppService],
