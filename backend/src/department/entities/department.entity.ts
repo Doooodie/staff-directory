@@ -1,19 +1,25 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class Department {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-  @Column()
+  @Column('varchar', { length: 100, unique: true })
   name: string;
 
-  @Column()
-  description: string;
+  @Column('text', { nullable: true })
+  description?: string;
 
-  @Column()
+  @CreateDateColumn('timestamptz')
   createdAt: Date;
 
-  @Column()
+  @UpdateDateColumn('timestamptz')
   updatedAt: Date;
 }

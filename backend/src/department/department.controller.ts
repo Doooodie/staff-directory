@@ -28,7 +28,7 @@ export class DepartmentController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.departmentService.findOne(+id);
+    return this.departmentService.findOne(id);
   }
 
   @Patch(':id')
@@ -36,11 +36,11 @@ export class DepartmentController {
     @Param('id') id: string,
     @Body() updateDepartmentDto: UpdateDepartmentDto,
   ) {
-    return this.departmentService.update(+id, updateDepartmentDto);
+    return this.departmentService.update(id, updateDepartmentDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.departmentService.remove(+id);
+    return this.departmentService.remove(id);
   }
 }

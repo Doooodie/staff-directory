@@ -24,6 +24,7 @@ import { Department } from './department/entities/department.entity';
         database: configService.get('DB_NAME'),
         entities: [Department],
         synchronize: false,
+        migrationsRun: false,
       }),
     }),
     DepartmentModule,

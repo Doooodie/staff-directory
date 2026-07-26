@@ -40,6 +40,7 @@ const customRulesConfig = defineConfig({
     '@typescript-eslint/no-floating-promises': 'warn',
     '@typescript-eslint/no-unsafe-argument': 'warn',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
+    '@typescript-eslint/promise-function-async': 'off',
   },
 });
 
