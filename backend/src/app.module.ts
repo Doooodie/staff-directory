@@ -7,6 +7,7 @@ import { AppService } from './app.service';
 import { DepartmentsModule } from './departments/departments.module';
 import { EmployeesModule } from './employees/employees.module';
 import { RolesModule } from './roles/roles.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { RolesModule } from './roles/roles.module';
     DepartmentsModule,
     RolesModule,
     EmployeesModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -11,7 +11,7 @@ import type { Relation } from 'typeorm';
 
 import type { Employee } from 'src/employees/entities/employee.entity';
 
-export enum RoleLevel {
+export enum EmployeeRoleLevel {
   JUNIOR = 'JUNIOR',
   MID = 'MID',
   SENIOR = 'SENIOR',
@@ -27,8 +27,8 @@ export class Role {
   @Column('varchar', { length: 100, unique: true })
   title: string;
 
-  @Column('enum', { enum: RoleLevel })
-  level: RoleLevel;
+  @Column('enum', { enum: EmployeeRoleLevel })
+  level: EmployeeRoleLevel;
 
   @CreateDateColumn('timestamptz')
   createdAt: Date;

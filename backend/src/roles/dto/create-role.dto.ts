@@ -1,6 +1,6 @@
 import { IsEnum, IsNotEmpty, IsString, MaxLength } from 'class-validator';
 
-import { RoleLevel } from '../entities/role.entity';
+import { EmployeeRoleLevel } from '../entities/role.entity';
 
 export class CreateRoleDto {
   @IsString()
@@ -9,6 +9,6 @@ export class CreateRoleDto {
   title: string;
 
   @IsString()
-  @IsEnum(RoleLevel)
-  level: RoleLevel;
+  @IsEnum(EmployeeRoleLevel)
+  level: EmployeeRoleLevel;
 }
