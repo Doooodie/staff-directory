@@ -1,24 +1,24 @@
 import { createMock } from '@golevelup/ts-vitest';
 import { Test } from '@nestjs/testing';
 
-import { DepartmentService } from './department.service';
+import { DepartmentsService } from './departments.service';
 
 import type { TestingModule } from '@nestjs/testing';
 import type { Repository } from 'typeorm';
 
 import type { Department } from './entities/department.entity';
 
-describe('DepartmentService', () => {
-  let service: DepartmentService;
+describe('DepartmentsService', () => {
+  let service: DepartmentsService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [DepartmentService],
+      providers: [DepartmentsService],
     })
       .useMocker(() => createMock<Repository<Department>>())
       .compile();
 
-    service = module.get<DepartmentService>(DepartmentService);
+    service = module.get<DepartmentsService>(DepartmentsService);
   });
 
   it('should be defined', () => {

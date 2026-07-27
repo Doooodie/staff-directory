@@ -10,7 +10,7 @@ import {
 
 import type { Relation } from 'typeorm';
 
-import type { Department } from 'src/department/entities/department.entity';
+import type { Department } from 'src/departments/entities/department.entity';
 import type { Role } from 'src/roles/entities/role.entity';
 
 @Entity()

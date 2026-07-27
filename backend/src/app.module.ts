@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { DepartmentModule } from './department/department.module';
+import { DepartmentsModule } from './departments/departments.module';
 import { EmployeeModule } from './employee/employee.module';
 import { RolesModule } from './roles/roles.module';
 
@@ -28,7 +28,7 @@ import { RolesModule } from './roles/roles.module';
         migrationsRun: false,
       }),
     }),
-    DepartmentModule,
+    DepartmentsModule,
     RolesModule,
     EmployeeModule,
   ],

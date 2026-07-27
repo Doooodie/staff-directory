@@ -7,31 +7,32 @@ import { UpdateDepartmentDto } from './dto/update-department.dto';
 import { Department } from './entities/department.entity';
 
 @Injectable()
-export class DepartmentService {
+export class DepartmentsService {
   constructor(
     @InjectRepository(Department)
-    private departmentRepository: Repository<Department>,
+    private departmentsRepository: Repository<Department>,
   ) {}
 
   async create(createDepartmentDto: CreateDepartmentDto) {
-    const newDepartment = this.departmentRepository.create(createDepartmentDto);
-    return this.departmentRepository.save(newDepartment);
+    const newDepartment =
+      this.departmentsRepository.create(createDepartmentDto);
+    return this.departmentsRepository.save(newDepartment);
   }
 
   findAll() {
-    return this.departmentRepository.find();
+    return this.departmentsRepository.find();
   }
 
   findOne(id: string) {
-    return this.departmentRepository.findOneBy({ id });
+    return this.departmentsRepository.findOneBy({ id });
   }
 
   async update(id: string, updateDepartmentDto: UpdateDepartmentDto) {
-    await this.departmentRepository.update(id, updateDepartmentDto);
+    await this.departmentsRepository.update(id, updateDepartmentDto);
     return this.findOne(id);
   }
 
   async remove(id: string) {
-    await this.departmentRepository.delete(id);
+    await this.departmentsRepository.delete(id);
   }
 }
