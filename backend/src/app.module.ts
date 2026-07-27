@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DepartmentsModule } from './departments/departments.module';
-import { EmployeeModule } from './employee/employee.module';
+import { EmployeesModule } from './employees/employees.module';
 import { RolesModule } from './roles/roles.module';
 
 @Module({
@@ -30,7 +30,7 @@ import { RolesModule } from './roles/roles.module';
     }),
     DepartmentsModule,
     RolesModule,
-    EmployeeModule,
+    EmployeesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

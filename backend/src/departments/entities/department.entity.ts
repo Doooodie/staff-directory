@@ -9,7 +9,7 @@ import {
 
 import type { Relation } from 'typeorm';
 
-import type { Employee } from 'src/employee/entities/employee.entity';
+import type { Employee } from 'src/employees/entities/employee.entity';
 
 @Entity()
 export class Department {
