@@ -2,9 +2,14 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+
+import type { Relation } from 'typeorm';
+
+import type { Employee } from 'src/employee/entities/employee.entity';
 
 export enum RoleLevel {
   JUNIOR = 'JUNIOR',
@@ -30,4 +35,7 @@ export class Role {
 
   @UpdateDateColumn('timestamptz')
   updatedAt: Date;
+
+  @OneToMany('Employee', (employee: Employee) => employee.role)
+  employees: Relation<Employee[]>;
 }
