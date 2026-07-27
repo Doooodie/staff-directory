@@ -1,24 +1,24 @@
 import { createMock } from '@golevelup/ts-vitest';
 import { Test } from '@nestjs/testing';
 
-import { RoleService } from './role.service';
+import { RolesService } from './roles.service';
 
 import type { TestingModule } from '@nestjs/testing';
 import type { Repository } from 'typeorm';
 
 import type { Role } from './entities/role.entity';
 
-describe('RoleService', () => {
-  let service: RoleService;
+describe('RolesService', () => {
+  let service: RolesService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [RoleService],
+      providers: [RolesService],
     })
       .useMocker(() => createMock<Repository<Role>>())
       .compile();
 
-    service = module.get<RoleService>(RoleService);
+    service = module.get<RolesService>(RolesService);
   });
 
   it('should be defined', () => {

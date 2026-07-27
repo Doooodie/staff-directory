@@ -7,31 +7,31 @@ import { UpdateRoleDto } from './dto/update-role.dto';
 import { Role } from './entities/role.entity';
 
 @Injectable()
-export class RoleService {
+export class RolesService {
   constructor(
     @InjectRepository(Role)
-    private roleRepository: Repository<Role>,
+    private rolesRepository: Repository<Role>,
   ) {}
 
   async create(createRoleDto: CreateRoleDto) {
-    const newRole = this.roleRepository.create(createRoleDto);
-    return this.roleRepository.save(newRole);
+    const newRole = this.rolesRepository.create(createRoleDto);
+    return this.rolesRepository.save(newRole);
   }
 
   findAll() {
-    return this.roleRepository.find();
+    return this.rolesRepository.find();
   }
 
   findOne(id: string) {
-    return this.roleRepository.findOneBy({ id });
+    return this.rolesRepository.findOneBy({ id });
   }
 
   async update(id: string, updateRoleDto: UpdateRoleDto) {
-    await this.roleRepository.update(id, updateRoleDto);
+    await this.rolesRepository.update(id, updateRoleDto);
     return this.findOne(id);
   }
 
   async remove(id: string) {
-    await this.roleRepository.delete(id);
+    await this.rolesRepository.delete(id);
   }
 }

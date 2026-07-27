@@ -6,7 +6,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DepartmentModule } from './department/department.module';
 import { EmployeeModule } from './employee/employee.module';
-import { RoleModule } from './role/role.module';
+import { RolesModule } from './roles/roles.module';
 
 @Module({
   imports: [
@@ -29,7 +29,7 @@ import { RoleModule } from './role/role.module';
       }),
     }),
     DepartmentModule,
-    RoleModule,
+    RolesModule,
     EmployeeModule,
   ],
   controllers: [AppController],

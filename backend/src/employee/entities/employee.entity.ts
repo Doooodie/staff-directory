@@ -11,7 +11,7 @@ import {
 import type { Relation } from 'typeorm';
 
 import type { Department } from 'src/department/entities/department.entity';
-import type { Role } from 'src/role/entities/role.entity';
+import type { Role } from 'src/roles/entities/role.entity';
 
 @Entity()
 export class Employee {
