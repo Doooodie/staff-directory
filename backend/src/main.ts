@@ -1,8 +1,9 @@
 import { ValidationPipe } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { FastifyAdapter } from '@nestjs/platform-fastify';
 
 import { AppModule } from './app.module';
+import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
 
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 
@@ -11,6 +12,7 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter(),
   );
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -18,6 +20,10 @@ async function bootstrap() {
       transform: true,
     }),
   );
+
+  const httpAdapter = app.get(HttpAdapterHost);
+  app.useGlobalFilters(new GlobalExceptionFilter(httpAdapter));
+
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap().catch(console.error);

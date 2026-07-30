@@ -1,44 +1,32 @@
-import {
-  ArgumentsHost,
-  Catch,
-  ExceptionFilter,
-  HttpException,
-  HttpStatus,
-} from '@nestjs/common';
-import { HttpAdapterHost } from '@nestjs/core';
+import { ArgumentsHost, Catch, HttpException } from '@nestjs/common';
+import { BaseExceptionFilter, HttpAdapterHost } from '@nestjs/core';
 
 @Catch()
-export class GlobalExceptionFilter implements ExceptionFilter {
-  constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
+export class GlobalExceptionFilter extends BaseExceptionFilter {
+  constructor(protected readonly httpAdapterHost: HttpAdapterHost) {
+    super(httpAdapterHost.httpAdapter);
+  }
 
   catch(exception: unknown, host: ArgumentsHost) {
     const { httpAdapter } = this.httpAdapterHost;
-
     const ctx = host.switchToHttp();
 
-    const httpStatus =
-      exception instanceof HttpException
-        ? exception.getStatus()
-        : HttpStatus.INTERNAL_SERVER_ERROR;
+    if (!(exception instanceof HttpException)) {
+      this.handleUnknownError(exception, host, httpAdapter);
+      return;
+    }
 
-    const httpError =
-      exception instanceof HttpException
-        ? exception.getResponse()
-        : HttpStatus.INTERNAL_SERVER_ERROR;
-
-    const httpMessage =
-      exception instanceof HttpException
-        ? exception.message
-        : HttpStatus.INTERNAL_SERVER_ERROR;
+    const status = exception.getStatus();
+    const res = exception.getResponse();
+    const body = typeof res === 'string' ? { message: res } : res;
 
     const responseBody = {
-      statusCode: httpStatus,
-      error: httpError,
-      message: httpMessage,
+      statusCode: status,
+      ...body,
       timestamp: new Date().toISOString(),
       path: httpAdapter.getRequestUrl(ctx.getRequest()),
     };
 
-    httpAdapter.reply(ctx.getResponse(), responseBody, httpStatus);
+    httpAdapter.reply(ctx.getResponse(), responseBody, status);
   }
 }
