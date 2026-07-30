@@ -22,10 +22,10 @@ export class Department {
   @Column('text', { nullable: true })
   description?: string;
 
-  @CreateDateColumn('timestamptz')
+  @CreateDateColumn({ type: 'timestamptz' })
   createdAt: Date;
 
-  @UpdateDateColumn('timestamptz')
+  @UpdateDateColumn({ type: 'timestamptz' })
   updatedAt: Date;
 
   @OneToMany('Employee', (employee: Employee) => employee.department)

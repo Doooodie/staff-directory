@@ -30,10 +30,10 @@ export class Role {
   @Column('enum', { enum: EmployeeRoleLevel })
   level: EmployeeRoleLevel;
 
-  @CreateDateColumn('timestamptz')
+  @CreateDateColumn({ type: 'timestamptz' })
   createdAt: Date;
 
-  @UpdateDateColumn('timestamptz')
+  @UpdateDateColumn({ type: 'timestamptz' })
   updatedAt: Date;
 
   @OneToMany('Employee', (employee: Employee) => employee.role)

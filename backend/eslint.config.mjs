@@ -44,7 +44,15 @@ const customRulesConfig = defineConfig({
   },
 });
 
+const devScriptsConfig = defineConfig({
+  files: ['src/seed.ts'],
+  rules: {
+    'import-x/no-extraneous-dependencies': ['error', { devDependencies: true }],
+  },
+});
+
 export default defineConfig([
+  { ignores: ['src/database/migrations/**'] },
   includeIgnoreFile(gitignorePath),
   ...jsConfig,
   ...nodeConfig,
@@ -52,4 +60,5 @@ export default defineConfig([
   ...typescriptConfig,
   eslintPluginPrettierRecommended,
   ...customRulesConfig,
+  ...devScriptsConfig,
 ]);

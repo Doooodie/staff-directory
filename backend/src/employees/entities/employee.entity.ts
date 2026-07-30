@@ -50,9 +50,9 @@ export class Employee {
   @JoinColumn({ name: 'roleId' })
   role: Relation<Role>;
 
-  @CreateDateColumn('timestamptz')
+  @CreateDateColumn({ type: 'timestamptz' })
   createdAt: Date;
 
-  @UpdateDateColumn('timestamptz')
+  @UpdateDateColumn({ type: 'timestamptz' })
   updatedAt: Date;
 }

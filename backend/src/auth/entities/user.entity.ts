@@ -25,9 +25,9 @@ export class User {
   @Column('enum', { enum: UserRoleLevel, default: UserRoleLevel.USER })
   role: UserRoleLevel;
 
-  @CreateDateColumn('timestamptz')
+  @CreateDateColumn({ type: 'timestamptz' })
   createdAt: Date;
 
-  @UpdateDateColumn('timestamptz')
+  @UpdateDateColumn({ type: 'timestamptz' })
   updatedAt: Date;
 }
