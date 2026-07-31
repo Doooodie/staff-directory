@@ -1,6 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+
+import { Department } from 'src/departments/entities/department.entity';
+import { Role } from 'src/roles/entities/role.entity';
 
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
@@ -11,11 +18,39 @@ export class EmployeesService {
   constructor(
     @InjectRepository(Employee)
     private employeesRepository: Repository<Employee>,
+    @InjectRepository(Department)
+    private departmentsRepository: Repository<Department>,
+    @InjectRepository(Role)
+    private rolesRepository: Repository<Role>,
   ) {}
 
+  private async ensureDepartmentExists(id: string) {
+    const department = await this.departmentsRepository.findOneBy({ id });
+    if (!department)
+      throw new NotFoundException(`Department with id ${id} does not exist`);
+  }
+
+  private async ensureRoleExists(id: string) {
+    const role = await this.rolesRepository.findOneBy({ id });
+    if (!role) throw new NotFoundException(`Role with id ${id} does not exist`);
+  }
+
   async create(createEmployeeDto: CreateEmployeeDto) {
+    const { email, departmentId, roleId } = createEmployeeDto;
+    const employee = await this.employeesRepository.findOneBy({ email });
+
+    if (employee) {
+      throw new ConflictException(
+        `Employee with email ${email} already exists`,
+      );
+    }
+
+    await this.ensureDepartmentExists(departmentId);
+    await this.ensureRoleExists(roleId);
+
     const newEmployee = this.employeesRepository.create(createEmployeeDto);
-    return this.employeesRepository.save(newEmployee);
+    const saved = await this.employeesRepository.save(newEmployee);
+    return this.findOne(saved.id);
   }
 
   findAll() {
@@ -24,20 +59,49 @@ export class EmployeesService {
     });
   }
 
-  findOne(id: string) {
-    return this.employeesRepository.findOne({
+  async findOne(id: string) {
+    const employee = await this.employeesRepository.findOne({
       where: { id },
       relations: { department: true, role: true },
     });
+
+    if (!employee) {
+      throw new NotFoundException(`Employee with id ${id} does not exist`);
+    }
+
+    return employee;
   }
 
   async update(id: string, updateEmployeeDto: UpdateEmployeeDto) {
+    const { email, departmentId, roleId } = updateEmployeeDto;
+
+    if (!(await this.employeesRepository.existsBy({ id }))) {
+      throw new NotFoundException(`Employee with id ${id} does not exist`);
+    }
+
+    if (email) {
+      const employee = await this.employeesRepository.findOneBy({ email });
+
+      if (employee && employee.id !== id) {
+        throw new ConflictException(
+          `Employee with email ${email} already exists`,
+        );
+      }
+    }
+
+    if (departmentId) await this.ensureDepartmentExists(departmentId);
+    if (roleId) await this.ensureRoleExists(roleId);
+
     await this.employeesRepository.update(id, updateEmployeeDto);
     return this.findOne(id);
   }
 
   async remove(id: string) {
+    if (!(await this.employeesRepository.existsBy({ id }))) {
+      throw new NotFoundException(`Employee with id ${id} does not exist`);
+    }
+
     await this.employeesRepository.update(id, { isActive: false });
-    return this.findOne(id);
+    return { message: 'Employee deactivated successfully', id };
   }
 }

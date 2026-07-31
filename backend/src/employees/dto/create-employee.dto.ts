@@ -1,6 +1,6 @@
-import { Transform, TransformFnParams, Type } from 'class-transformer';
+import { Transform, TransformFnParams } from 'class-transformer';
 import {
-  IsDate,
+  IsDateString,
   IsEmail,
   IsNotEmpty,
   IsNumber,
@@ -8,10 +8,12 @@ import {
   IsString,
   IsUUID,
   Max,
-  MaxDate,
   MaxLength,
   Min,
+  Validate,
 } from 'class-validator';
+
+import { IsNotFutureDateStringConstraint } from 'src/common/validators/is-not-future-date-string';
 
 export class CreateEmployeeDto {
   @IsString()
@@ -35,10 +37,9 @@ export class CreateEmployeeDto {
   email: string;
 
   @IsNotEmpty()
-  @Type(() => Date)
-  @IsDate()
-  @MaxDate(new Date())
-  hireDate: Date;
+  @IsDateString({ strict: true })
+  @Validate(IsNotFutureDateStringConstraint)
+  hireDate: string;
 
   @IsNumber()
   @IsNotEmpty()

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -22,8 +22,14 @@ export class RolesService {
     return this.rolesRepository.find();
   }
 
-  findOne(id: string) {
-    return this.rolesRepository.findOneBy({ id });
+  async findOne(id: string) {
+    const role = await this.rolesRepository.findOneBy({ id });
+
+    if (!role) {
+      throw new NotFoundException(`Role with id ${id} does not exist`);
+    }
+
+    return role;
   }
 
   async update(id: string, updateRoleDto: UpdateRoleDto) {

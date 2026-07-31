@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -23,8 +23,14 @@ export class DepartmentsService {
     return this.departmentsRepository.find();
   }
 
-  findOne(id: string) {
-    return this.departmentsRepository.findOneBy({ id });
+  async findOne(id: string) {
+    const department = await this.departmentsRepository.findOneBy({ id });
+
+    if (!department) {
+      throw new NotFoundException(`Department with id ${id} does not exist`);
+    }
+
+    return department;
   }
 
   async update(id: string, updateDepartmentDto: UpdateDepartmentDto) {
