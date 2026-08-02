@@ -71,14 +71,15 @@ export class RolesService {
       throw new NotFoundException(`Role with id ${id} does not exist`);
     }
 
-    const activeEmployeeCount = await this.employeesRepository.count({
+    const employeesCount = await this.employeesRepository.count({
       where: { roleId: id },
     });
 
-    if (activeEmployeeCount > 0) {
-      throw new ConflictException(`Role with id ${id} has active employees`);
+    if (employeesCount > 0) {
+      throw new ConflictException(`Role with id ${id} has employees`);
     }
 
     await this.rolesRepository.delete(id);
+    return { message: 'Role deleted successfully', id };
   }
 }

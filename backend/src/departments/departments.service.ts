@@ -21,6 +21,26 @@ export class DepartmentsService {
     private employeesRepository: Repository<Employee>,
   ) {}
 
+  private toResponse(department: Department) {
+    return {
+      id: department.id,
+      name: department.name,
+      description: department.description,
+      createdAt: department.createdAt,
+      updatedAt: department.updatedAt,
+    };
+  }
+
+  private async findDepartment(id: string) {
+    const department = await this.departmentsRepository.findOneBy({ id });
+
+    if (!department) {
+      throw new NotFoundException(`Department with id ${id} does not exist`);
+    }
+
+    return department;
+  }
+
   async create(createDepartmentDto: CreateDepartmentDto) {
     const { name } = createDepartmentDto;
     const department = await this.departmentsRepository.findOneBy({ name });
@@ -46,45 +66,24 @@ export class DepartmentsService {
           where: { departmentId: department.id, isActive: true },
         });
 
-        return {
-          id: department.id,
-          name: department.name,
-          description: department.description,
-          activeEmployeeCount,
-          createdAt: department.createdAt,
-          updatedAt: department.updatedAt,
-        };
+        return { ...this.toResponse(department), activeEmployeeCount };
       }),
     );
   }
 
   async findOne(id: string) {
-    const department = await this.departmentsRepository.findOneBy({ id });
-
-    if (!department) {
-      throw new NotFoundException(`Department with id ${id} does not exist`);
-    }
-
+    const department = await this.findDepartment(id);
     const employees = await this.employeesRepository.find({
       where: { departmentId: department.id, isActive: true },
     });
 
-    return {
-      id: department.id,
-      name: department.name,
-      description: department.description,
-      createdAt: department.createdAt,
-      updatedAt: department.updatedAt,
-      employees,
-    };
+    return { ...this.toResponse(department), employees };
   }
 
   async update(id: string, updateDepartmentDto: UpdateDepartmentDto) {
     const { name } = updateDepartmentDto;
 
-    if (!(await this.departmentsRepository.existsBy({ id }))) {
-      throw new NotFoundException(`Department with id ${id} does not exist`);
-    }
+    await this.findDepartment(id);
 
     if (name) {
       const department = await this.departmentsRepository.findOneBy({ name });
@@ -97,13 +96,11 @@ export class DepartmentsService {
     }
 
     await this.departmentsRepository.update(id, updateDepartmentDto);
-    return this.findOne(id);
+    return this.toResponse(await this.findDepartment(id));
   }
 
   async remove(id: string) {
-    if (!(await this.departmentsRepository.existsBy({ id }))) {
-      throw new NotFoundException(`Department with id ${id} does not exist`);
-    }
+    await this.findDepartment(id);
 
     const activeEmployeeCount = await this.employeesRepository.count({
       where: { departmentId: id, isActive: true },
@@ -115,6 +112,17 @@ export class DepartmentsService {
       );
     }
 
+    const employeesCount = await this.employeesRepository.count({
+      where: { departmentId: id },
+    });
+
+    if (employeesCount > 0) {
+      throw new ConflictException(
+        `Department with id ${id} has inactive employees`,
+      );
+    }
+
     await this.departmentsRepository.delete(id);
+    return { message: 'Department deleted successfully', id };
   }
 }

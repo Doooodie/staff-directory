@@ -6,7 +6,7 @@ import { Repository } from 'typeorm';
 
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
-import { User } from './entities/user.entity';
+import { User, UserRoleLevel } from './entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -33,10 +33,15 @@ export class AuthService {
   }
 
   async register(registerDto: RegisterDto) {
-    const { password, ...rest } = registerDto;
+    const { email, password, role } = registerDto;
     const hash = await bcrypt.hash(password, 10);
-    const newRegisterDto = { ...rest, password: hash };
-    const newUser = this.usersRepository.create(newRegisterDto);
+
+    const newUser = this.usersRepository.create({
+      email,
+      password: hash,
+      role: role ?? UserRoleLevel.USER,
+    });
+
     return this.usersRepository.save(newUser);
   }
 }

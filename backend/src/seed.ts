@@ -77,7 +77,7 @@ async function seed() {
         email: faker.internet
           .email({ firstName, lastName, provider: 'company.com' })
           .toLowerCase(),
-        hireDate: faker.date.past(),
+        hireDate: faker.date.past().toISOString().slice(0, 10),
         salary: +faker.finance.amount({ min: 0.01, max: 999999.99, dec: 2 }),
         departmentId: faker.helpers.arrayElement(savedDepartments).id,
         roleId: faker.helpers.arrayElement(savedRoles).id,

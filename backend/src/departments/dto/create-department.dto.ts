@@ -6,8 +6,8 @@ export class CreateDepartmentDto {
   @MaxLength(100)
   name: string;
 
-  @IsString()
   @IsOptional()
+  @IsString()
   @MaxLength(500)
   description?: string;
 }
