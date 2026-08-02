@@ -1,6 +1,12 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+
+import { Employee } from 'src/employees/entities/employee.entity';
 
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
@@ -11,9 +17,18 @@ export class RolesService {
   constructor(
     @InjectRepository(Role)
     private rolesRepository: Repository<Role>,
+    @InjectRepository(Employee)
+    private employeesRepository: Repository<Employee>,
   ) {}
 
   async create(createRoleDto: CreateRoleDto) {
+    const { title } = createRoleDto;
+    const role = await this.rolesRepository.findOneBy({ title });
+
+    if (role) {
+      throw new ConflictException(`Role with title ${title} already exists`);
+    }
+
     const newRole = this.rolesRepository.create(createRoleDto);
     return this.rolesRepository.save(newRole);
   }
@@ -33,11 +48,37 @@ export class RolesService {
   }
 
   async update(id: string, updateRoleDto: UpdateRoleDto) {
+    const { title } = updateRoleDto;
+
+    if (!(await this.rolesRepository.existsBy({ id }))) {
+      throw new NotFoundException(`Role with id ${id} does not exist`);
+    }
+
+    if (title) {
+      const role = await this.rolesRepository.findOneBy({ title });
+
+      if (role && role.id !== id) {
+        throw new ConflictException(`Role with title ${title} already exists`);
+      }
+    }
+
     await this.rolesRepository.update(id, updateRoleDto);
     return this.findOne(id);
   }
 
   async remove(id: string) {
+    if (!(await this.rolesRepository.existsBy({ id }))) {
+      throw new NotFoundException(`Role with id ${id} does not exist`);
+    }
+
+    const activeEmployeeCount = await this.employeesRepository.count({
+      where: { roleId: id },
+    });
+
+    if (activeEmployeeCount > 0) {
+      throw new ConflictException(`Role with id ${id} has active employees`);
+    }
+
     await this.rolesRepository.delete(id);
   }
 }
