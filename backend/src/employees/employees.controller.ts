@@ -31,6 +31,11 @@ export class EmployeesController {
     return this.employeesService.findAll(query);
   }
 
+  @Get('stats')
+  getStats() {
+    return this.employeesService.getStats();
+  }
+
   @Get(':id')
   findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.employeesService.findOne(id);

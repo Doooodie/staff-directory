@@ -98,6 +98,62 @@ export class EmployeesService {
     return { data, total, page, limit, totalPages };
   }
 
+  async getStats() {
+    const employeeStatsQb = this.employeesRepository
+      .createQueryBuilder('employee')
+      .select('COUNT(*)', 'total')
+      .addSelect('COUNT(*) FILTER (WHERE employee.isActive = true)', 'active')
+      .addSelect(
+        'COUNT(*) FILTER (WHERE employee.isActive = false)',
+        'inactive',
+      )
+      .getRawOne<{
+        total: string;
+        active: string;
+        inactive: string;
+      }>();
+
+    const departmentStatsQb = this.employeesRepository
+      .createQueryBuilder('employee')
+      .select('department.id', 'departmentId')
+      .addSelect('department.name', 'departmentName')
+      .addSelect('COUNT(employee.id)', 'count')
+      .addSelect(
+        'COUNT(employee.id) FILTER (WHERE employee.isActive = true)',
+        'activeCount',
+      )
+      .addSelect('ROUND(AVG(employee.salary), 1)', 'averageSalary')
+      .leftJoin('employee.department', 'department')
+      .groupBy('department.id')
+      .getRawMany<{
+        departmentId: string;
+        departmentName: string;
+        count: string;
+        activeCount: string;
+        averageSalary: string;
+      }>();
+
+    const [employeeStatsRaw, departmentStatsRaw] = await Promise.all([
+      employeeStatsQb,
+      departmentStatsQb,
+    ]);
+
+    const byDepartment = departmentStatsRaw.map((row) => ({
+      departmentId: row.departmentId,
+      departmentName: row.departmentName,
+      count: Number(row.count),
+      activeCount: Number(row.activeCount),
+      averageSalary: Number(row.averageSalary),
+    }));
+
+    return {
+      total: Number(employeeStatsRaw?.total ?? 0),
+      active: Number(employeeStatsRaw?.active ?? 0),
+      inactive: Number(employeeStatsRaw?.inactive ?? 0),
+      byDepartment,
+    };
+  }
+
   async findOne(id: string) {
     const employee = await this.employeesRepository.findOne({
       where: { id },
