@@ -4,12 +4,13 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Brackets, Repository } from 'typeorm';
 
 import { Department } from 'src/departments/entities/department.entity';
 import { Role } from 'src/roles/entities/role.entity';
 
 import { CreateEmployeeDto } from './dto/create-employee.dto';
+import { GetAllEmployeesQuery } from './dto/get-all-employees.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { Employee } from './entities/employee.entity';
 
@@ -53,10 +54,48 @@ export class EmployeesService {
     return this.findOne(saved.id);
   }
 
-  findAll() {
-    return this.employeesRepository.find({
-      relations: { department: true, role: true },
-    });
+  async findAll(query: GetAllEmployeesQuery) {
+    const { page, limit, search, departmentId, roleId, isActive } = query;
+
+    const qb = this.employeesRepository
+      .createQueryBuilder('employee')
+      .leftJoinAndSelect('employee.department', 'department')
+      .leftJoinAndSelect('employee.role', 'role')
+      .orderBy('employee.createdAt', 'DESC')
+      .skip((page - 1) * limit)
+      .take(limit);
+
+    if (departmentId) {
+      qb.andWhere('employee.departmentId = :departmentId', { departmentId });
+    }
+
+    if (roleId) {
+      qb.andWhere('employee.roleId = :roleId', { roleId });
+    }
+
+    if (isActive !== undefined) {
+      qb.andWhere('employee.isActive = :isActive', { isActive });
+    }
+
+    if (search) {
+      qb.andWhere(
+        new Brackets((sub) => {
+          sub
+            .orWhere('employee.firstName ILIKE :search', {
+              search: `%${search}%`,
+            })
+            .orWhere('employee.lastName ILIKE :search', {
+              search: `%${search}%`,
+            })
+            .orWhere('employee.email ILIKE :search', { search: `%${search}%` });
+        }),
+      );
+    }
+
+    const [data, total] = await qb.getManyAndCount();
+    const totalPages = Math.ceil(total / limit);
+
+    return { data, total, page, limit, totalPages };
   }
 
   async findOne(id: string) {
