@@ -1,9 +1,12 @@
 import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
 
+import { Trim } from 'src/common/decorators/trim.decorator';
+
 export class CreateDepartmentDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(100)
+  @Trim()
   name: string;
 
   @IsOptional()

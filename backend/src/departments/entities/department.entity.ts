@@ -20,7 +20,7 @@ export class Department {
   name: string;
 
   @Column('text', { nullable: true })
-  description?: string;
+  description: string | null;
 
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt: Date;

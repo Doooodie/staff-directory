@@ -36,7 +36,15 @@ export class Employee {
   @Column('date')
   hireDate: Date;
 
-  @Column('decimal', { precision: 12, scale: 2 })
+  @Column({
+    type: 'decimal',
+    precision: 12,
+    scale: 2,
+    transformer: {
+      from: (value: string) => Number(value),
+      to: (value: number) => value,
+    },
+  })
   salary: number;
 
   @Column('boolean', { default: true })

@@ -12,6 +12,14 @@ import { CreateDepartmentDto } from './dto/create-department.dto';
 import { UpdateDepartmentDto } from './dto/update-department.dto';
 import { Department } from './entities/department.entity';
 
+interface DepartmentResponseInput {
+  id: string;
+  name: string;
+  description: string | null;
+  createdAt: string | Date;
+  updatedAt: string | Date;
+}
+
 @Injectable()
 export class DepartmentsService {
   constructor(
@@ -21,7 +29,7 @@ export class DepartmentsService {
     private employeesRepository: Repository<Employee>,
   ) {}
 
-  private toResponse(department: Department) {
+  private toResponse(department: DepartmentResponseInput) {
     return {
       id: department.id,
       name: department.name,
@@ -53,22 +61,32 @@ export class DepartmentsService {
 
     const newDepartment =
       this.departmentsRepository.create(createDepartmentDto);
+    const savedDepartment =
+      await this.departmentsRepository.save(newDepartment);
 
-    return this.departmentsRepository.save(newDepartment);
+    return this.toResponse(savedDepartment);
   }
 
   async findAll() {
-    const departments = await this.departmentsRepository.find();
+    const rows = await this.departmentsRepository
+      .createQueryBuilder('department')
+      .leftJoin('department.employees', 'employee')
+      .select('department.id', 'id')
+      .addSelect('department.name', 'name')
+      .addSelect('department.description', 'description')
+      .addSelect('department.createdAt', 'createdAt')
+      .addSelect('department.updatedAt', 'updatedAt')
+      .addSelect(
+        'COUNT(employee.id) FILTER (WHERE employee.isActive = true)',
+        'activeEmployeeCount',
+      )
+      .groupBy('department.id')
+      .getRawMany<DepartmentResponseInput & { activeEmployeeCount: string }>();
 
-    return Promise.all(
-      departments.map(async (department) => {
-        const activeEmployeeCount = await this.employeesRepository.count({
-          where: { departmentId: department.id, isActive: true },
-        });
-
-        return { ...this.toResponse(department), activeEmployeeCount };
-      }),
-    );
+    return rows.map((row) => ({
+      ...this.toResponse(row),
+      activeEmployeeCount: Number(row.activeEmployeeCount),
+    }));
   }
 
   async findOne(id: string) {
@@ -109,16 +127,6 @@ export class DepartmentsService {
     if (activeEmployeeCount > 0) {
       throw new ConflictException(
         `Department with id ${id} has active employees`,
-      );
-    }
-
-    const employeesCount = await this.employeesRepository.count({
-      where: { departmentId: id },
-    });
-
-    if (employeesCount > 0) {
-      throw new ConflictException(
-        `Department with id ${id} has inactive employees`,
       );
     }
 

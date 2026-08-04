@@ -1,4 +1,4 @@
-import { Transform, Type } from 'class-transformer';
+import { Type } from 'class-transformer';
 import {
   IsBoolean,
   IsInt,
@@ -8,6 +8,9 @@ import {
   IsUUID,
   Max,
 } from 'class-validator';
+
+import { ToBoolean } from 'src/common/decorators/to-boolean.decorator';
+import { Trim } from 'src/common/decorators/trim.decorator';
 
 export class GetAllEmployeesQuery {
   @IsOptional()
@@ -25,6 +28,7 @@ export class GetAllEmployeesQuery {
 
   @IsOptional()
   @IsString()
+  @Trim()
   search?: string;
 
   @IsOptional()
@@ -36,14 +40,7 @@ export class GetAllEmployeesQuery {
   roleId?: string;
 
   @IsOptional()
-  @Transform(({ value }: { value?: string }) => {
-    const loweredValue = value?.toLowerCase();
-
-    if (loweredValue === 'true') return true;
-    if (loweredValue === 'false') return false;
-
-    return loweredValue;
-  })
+  @ToBoolean()
   @IsBoolean()
   isActive?: boolean;
 }

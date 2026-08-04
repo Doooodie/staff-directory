@@ -1,10 +1,9 @@
-import { Transform, TransformFnParams } from 'class-transformer';
+import { Type } from 'class-transformer';
 import {
   IsDateString,
   IsEmail,
   IsNotEmpty,
   IsNumber,
-  IsPositive,
   IsString,
   IsUUID,
   Max,
@@ -13,23 +12,20 @@ import {
   Validate,
 } from 'class-validator';
 
+import { Trim } from 'src/common/decorators/trim.decorator';
 import { IsNotFutureDateStringConstraint } from 'src/common/validators/is-not-future-date-string';
 
 export class CreateEmployeeDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(100)
-  @Transform(({ value }: TransformFnParams) =>
-    typeof value === 'string' ? value.trim() : '',
-  )
+  @Trim()
   firstName: string;
 
   @IsString()
   @IsNotEmpty()
   @MaxLength(100)
-  @Transform(({ value }: TransformFnParams) =>
-    typeof value === 'string' ? value.trim() : '',
-  )
+  @Trim()
   lastName: string;
 
   @IsEmail()
@@ -41,9 +37,8 @@ export class CreateEmployeeDto {
   @Validate(IsNotFutureDateStringConstraint)
   hireDate: string;
 
+  @Type(() => Number)
   @IsNumber()
-  @IsNotEmpty()
-  @IsPositive()
   @Min(0.01)
   @Max(999999.99)
   salary: number;
