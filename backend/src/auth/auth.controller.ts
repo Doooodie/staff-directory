@@ -7,9 +7,11 @@ import {
 } from '@nestjs/common';
 
 import { AuthService } from './auth.service';
+import { Public } from './decorators/public.decorator';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 
+@Public()
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('auth')
 export class AuthController {
