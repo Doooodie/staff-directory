@@ -10,6 +10,9 @@ import {
   Post,
 } from '@nestjs/common';
 
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { UserRoleLevel } from 'src/auth/entities/user.entity';
+
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { RolesService } from './roles.service';
@@ -20,6 +23,7 @@ export class RolesController {
 
   @Post()
   @HttpCode(201)
+  @Roles(UserRoleLevel.ADMIN)
   create(@Body() createRoleDto: CreateRoleDto) {
     return this.rolesService.create(createRoleDto);
   }
@@ -35,6 +39,7 @@ export class RolesController {
   }
 
   @Patch(':id')
+  @Roles(UserRoleLevel.ADMIN)
   update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateRoleDto: UpdateRoleDto,
@@ -43,6 +48,7 @@ export class RolesController {
   }
 
   @Delete(':id')
+  @Roles(UserRoleLevel.ADMIN)
   remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.rolesService.remove(id);
   }

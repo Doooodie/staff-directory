@@ -11,6 +11,9 @@ import {
   Query,
 } from '@nestjs/common';
 
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { UserRoleLevel } from 'src/auth/entities/user.entity';
+
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { GetAllEmployeesQuery } from './dto/get-all-employees.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
@@ -22,6 +25,7 @@ export class EmployeesController {
 
   @Post()
   @HttpCode(201)
+  @Roles(UserRoleLevel.ADMIN)
   create(@Body() createEmployeeDto: CreateEmployeeDto) {
     return this.employeesService.create(createEmployeeDto);
   }
@@ -42,6 +46,7 @@ export class EmployeesController {
   }
 
   @Patch(':id')
+  @Roles(UserRoleLevel.ADMIN)
   update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateEmployeeDto: UpdateEmployeeDto,
@@ -50,6 +55,7 @@ export class EmployeesController {
   }
 
   @Delete(':id')
+  @Roles(UserRoleLevel.ADMIN)
   remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.employeesService.remove(id);
   }

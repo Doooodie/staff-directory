@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+import { RolesGuard } from './auth/guards/roles.guard';
 import { DepartmentsModule } from './departments/departments.module';
 import { EmployeesModule } from './employees/employees.module';
 import { RolesModule } from './roles/roles.module';
@@ -38,6 +39,10 @@ import { RolesModule } from './roles/roles.module';
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
     },
   ],
 })
