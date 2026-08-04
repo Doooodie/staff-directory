@@ -56,7 +56,7 @@
     "@nestjs/testing": "^11.1.28",
     "@swc/cli": "^0.8.1",
     "@swc/core": "^1.15.47",
-    "@types/node": "^24.0.0",
+    "@types/node": "^24.13.3",
     "@types/passport-jwt": "^4.0.1",
     "@vitest/coverage-v8": "^4.1.10",
     "@vitest/eslint-plugin": "^1.6.26",
@@ -68,7 +68,7 @@
     "lefthook": "^2.1.10",
     "prettier": "^3.9.6",
     "ts-node": "^10.9.2",
-    "typescript": "^5.7.3",
+    "typescript": "^5.9.3",
     "unplugin-swc": "^1.5.10",
     "vitest": "^4.1.10"
   }
