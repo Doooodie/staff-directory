@@ -1,3 +1,4 @@
+import { ApiHideProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 import {
   Column,
@@ -20,6 +21,7 @@ export class User {
   @Column('varchar', { length: 255, unique: true })
   email: string;
 
+  @ApiHideProperty()
   @Column('varchar', { length: 255 })
   @Exclude()
   password: string;

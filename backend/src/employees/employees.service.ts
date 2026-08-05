@@ -55,7 +55,14 @@ export class EmployeesService {
   }
 
   async findAll(query: GetAllEmployeesQuery) {
-    const { page, limit, search, departmentId, roleId, isActive } = query;
+    const {
+      page = 1,
+      limit = 20,
+      search,
+      departmentId,
+      roleId,
+      isActive,
+    } = query;
 
     const qb = this.employeesRepository
       .createQueryBuilder('employee')

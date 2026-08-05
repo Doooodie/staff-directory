@@ -28,6 +28,7 @@
     "prepare": "cd .. && lefthook install"
   },
   "dependencies": {
+    "@fastify/static": "^9.3.0",
     "@nestjs/common": "^11.1.28",
     "@nestjs/config": "^4.0.4",
     "@nestjs/core": "^11.1.28",
@@ -35,6 +36,7 @@
     "@nestjs/mapped-types": "^2.1.1",
     "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-fastify": "^11.1.28",
+    "@nestjs/swagger": "^11.4.6",
     "@nestjs/typeorm": "^11.0.3",
     "bcryptjs": "^3.0.3",
     "class-transformer": "^0.5.1",

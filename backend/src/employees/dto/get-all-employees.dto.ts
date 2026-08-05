@@ -1,3 +1,4 @@
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   IsBoolean,
@@ -13,18 +14,20 @@ import { ToBoolean } from 'src/common/decorators/to-boolean.decorator';
 import { Trim } from 'src/common/decorators/trim.decorator';
 
 export class GetAllEmployeesQuery {
+  @ApiPropertyOptional({ default: 1 })
   @IsOptional()
   @Type(() => Number)
   @IsInt()
   @IsPositive()
-  page = 1;
+  page?: number;
 
+  @ApiPropertyOptional({ default: 20 })
   @IsOptional()
   @Type(() => Number)
   @IsInt()
   @IsPositive()
   @Max(100)
-  limit = 20;
+  limit?: number;
 
   @IsOptional()
   @IsString()

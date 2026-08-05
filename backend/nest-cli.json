@@ -5,11 +5,9 @@
   "compilerOptions": {
     "deleteOutDir": true,
     "typeCheck": true,
-    "builder": {
-      "type": "swc",
-      "options": {
-        "ignore": ["**/*.spec.ts"]
-      }
-    }
+    "builder": { "type": "swc", "options": { "ignore": ["**/*.spec.ts"] } },
+    "plugins": [
+      { "name": "@nestjs/swagger", "options": { "esmCompatible": true } }
+    ]
   }
 }
