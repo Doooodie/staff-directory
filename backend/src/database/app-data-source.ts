@@ -15,6 +15,9 @@ const AppDataSource = new DataSource({
   synchronize: false,
   migrationsRun: false,
   logging: true,
+  ssl: process.env.DB_HOST?.includes('neon.tech')
+    ? { rejectUnauthorized: false }
+    : false,
 });
 
 export default AppDataSource;

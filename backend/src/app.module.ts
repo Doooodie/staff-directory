@@ -28,6 +28,9 @@ import { RolesModule } from './roles/roles.module';
         autoLoadEntities: true,
         synchronize: false,
         migrationsRun: false,
+        ssl: configService.get('DB_HOST')?.includes('neon.tech')
+          ? { rejectUnauthorized: false }
+          : false,
       }),
     }),
     DepartmentsModule,
