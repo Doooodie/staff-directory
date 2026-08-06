@@ -24,7 +24,8 @@ npm run start:dev
 
 ## API documentation
 
-http://localhost:3000/api/docs
+- Remote: https://staff-directory-ap59.onrender.com/api/docs
+- Local: http://localhost:3000/api/docs
 
 ## Default credentials
 
