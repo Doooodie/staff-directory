@@ -3,11 +3,10 @@ import { ConflictException, NotFoundException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 
-import { Department } from 'src/departments/entities/department.entity';
-import { Role } from 'src/roles/entities/role.entity';
-
 import { EmployeesService } from './employees.service';
 import { Employee } from './entities/employee.entity';
+import { Department } from '../departments/entities/department.entity';
+import { Role } from '../roles/entities/role.entity';
 
 import type { DeepMocked } from '@golevelup/ts-vitest';
 import type { TestingModule } from '@nestjs/testing';

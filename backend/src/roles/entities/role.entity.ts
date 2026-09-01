@@ -9,7 +9,7 @@ import {
 
 import type { Relation } from 'typeorm';
 
-import type { Employee } from 'src/employees/entities/employee.entity';
+import type { Employee } from '../../employees/entities/employee.entity';
 
 export enum EmployeeRoleLevel {
   JUNIOR = 'JUNIOR',

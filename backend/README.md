@@ -6,7 +6,7 @@ NestJS · TypeORM · PostgreSQL · Passport.js · JWT · class-validator · @nes
 
 ## Prerequisites
 
-- Node.js 20+
+- Node.js v22.22.3+, v24.15+, or v26+
 - Docker and Docker Compose
 
 ## Getting started

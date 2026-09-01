@@ -1,7 +1,6 @@
 import { IsEnum, IsNotEmpty, IsString, MaxLength } from 'class-validator';
 
-import { Trim } from 'src/common/decorators/trim.decorator';
-
+import { Trim } from '../../common/decorators/trim.decorator';
 import { EmployeeRoleLevel } from '../entities/role.entity';
 
 export class CreateRoleDto {

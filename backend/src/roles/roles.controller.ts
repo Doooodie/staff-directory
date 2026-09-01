@@ -11,12 +11,11 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 
-import { Roles } from 'src/auth/decorators/roles.decorator';
-import { UserRoleLevel } from 'src/auth/entities/user.entity';
-
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { RolesService } from './roles.service';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { UserRoleLevel } from '../auth/entities/user.entity';
 
 @ApiBearerAuth()
 @Controller('roles')

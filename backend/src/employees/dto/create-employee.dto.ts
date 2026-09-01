@@ -12,8 +12,8 @@ import {
   Validate,
 } from 'class-validator';
 
-import { Trim } from 'src/common/decorators/trim.decorator';
-import { IsNotFutureDateStringConstraint } from 'src/common/validators/is-not-future-date-string';
+import { Trim } from '../../common/decorators/trim.decorator';
+import { IsNotFutureDateStringConstraint } from '../../common/validators/is-not-future-date-string';
 
 export class CreateEmployeeDto {
   @IsString()

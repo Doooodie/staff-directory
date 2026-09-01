@@ -10,8 +10,8 @@ import {
 
 import type { Relation } from 'typeorm';
 
-import type { Department } from 'src/departments/entities/department.entity';
-import type { Role } from 'src/roles/entities/role.entity';
+import type { Department } from '../../departments/entities/department.entity';
+import type { Role } from '../../roles/entities/role.entity';
 
 @Entity()
 export class Employee {
