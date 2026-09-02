@@ -6,7 +6,7 @@ import {
   IsStrongPassword,
 } from 'class-validator';
 
-import { UserRoleLevel } from '../entities/user.entity';
+import { UserRoleLevel } from '../entities/user.entity.js';
 
 export class RegisterDto {
   @IsEmail()

@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { EmployeesController } from './employees.controller';
-import { EmployeesService } from './employees.service';
-import { Employee } from './entities/employee.entity';
-import { Department } from '../departments/entities/department.entity';
-import { Role } from '../roles/entities/role.entity';
+import { EmployeesController } from './employees.controller.js';
+import { EmployeesService } from './employees.service.js';
+import { Employee } from './entities/employee.entity.js';
+import { Department } from '../departments/entities/department.entity.js';
+import { Role } from '../roles/entities/role.entity.js';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Employee, Department, Role])],

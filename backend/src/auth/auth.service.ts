@@ -8,9 +8,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { compare, hash } from 'bcryptjs';
 import { Repository } from 'typeorm';
 
-import { LoginDto } from './dto/login.dto';
-import { RegisterDto } from './dto/register.dto';
-import { User, UserRoleLevel } from './entities/user.entity';
+import { LoginDto } from './dto/login.dto.js';
+import { RegisterDto } from './dto/register.dto.js';
+import { User, UserRoleLevel } from './entities/user.entity.js';
 
 @Injectable()
 export class AuthService {

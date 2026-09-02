@@ -10,8 +10,8 @@ import {
   Max,
 } from 'class-validator';
 
-import { ToBoolean } from '../../common/decorators/to-boolean.decorator';
-import { Trim } from '../../common/decorators/trim.decorator';
+import { ToBoolean } from '../../common/decorators/to-boolean.decorator.js';
+import { Trim } from '../../common/decorators/trim.decorator.js';
 
 export class GetAllEmployeesQuery {
   @ApiPropertyOptional({ default: 1 })

@@ -16,12 +16,12 @@ import {
   ApiOperation,
 } from '@nestjs/swagger';
 
-import { DepartmentsService } from './departments.service';
-import { CreateDepartmentDto } from './dto/create-department.dto';
-import { UpdateDepartmentDto } from './dto/update-department.dto';
-import { Department } from './entities/department.entity';
-import { Roles } from '../auth/decorators/roles.decorator';
-import { UserRoleLevel } from '../auth/entities/user.entity';
+import { DepartmentsService } from './departments.service.js';
+import { CreateDepartmentDto } from './dto/create-department.dto.js';
+import { UpdateDepartmentDto } from './dto/update-department.dto.js';
+import { Department } from './entities/department.entity.js';
+import { Roles } from '../auth/decorators/roles.decorator.js';
+import { UserRoleLevel } from '../auth/entities/user.entity.js';
 
 @ApiBearerAuth()
 @Controller('departments')

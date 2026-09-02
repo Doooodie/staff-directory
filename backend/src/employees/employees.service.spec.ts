@@ -3,16 +3,16 @@ import { ConflictException, NotFoundException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 
-import { EmployeesService } from './employees.service';
-import { Employee } from './entities/employee.entity';
-import { Department } from '../departments/entities/department.entity';
-import { Role } from '../roles/entities/role.entity';
+import { EmployeesService } from './employees.service.js';
+import { Employee } from './entities/employee.entity.js';
+import { Department } from '../departments/entities/department.entity.js';
+import { Role } from '../roles/entities/role.entity.js';
 
 import type { DeepMocked } from '@golevelup/ts-vitest';
 import type { TestingModule } from '@nestjs/testing';
 import type { Repository } from 'typeorm';
 
-import type { CreateEmployeeDto } from './dto/create-employee.dto';
+import type { CreateEmployeeDto } from './dto/create-employee.dto.js';
 
 describe('EmployeesService', () => {
   let service: EmployeesService;

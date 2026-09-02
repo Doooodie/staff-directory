@@ -13,7 +13,7 @@ const AppDataSource = new DataSource({
   password: process.env.DB_PASS,
   database: process.env.DB_NAME,
   entities: ['src/**/*.entity.ts'],
-  migrations: [path.join(__dirname, 'migrations/*.ts')],
+  migrations: [path.join(import.meta.dirname, 'migrations', '*.ts')],
   synchronize: false,
   migrationsRun: false,
   logging: true,

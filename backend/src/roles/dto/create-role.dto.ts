@@ -1,7 +1,7 @@
 import { IsEnum, IsNotEmpty, IsString, MaxLength } from 'class-validator';
 
-import { Trim } from '../../common/decorators/trim.decorator';
-import { EmployeeRoleLevel } from '../entities/role.entity';
+import { Trim } from '../../common/decorators/trim.decorator.js';
+import { EmployeeRoleLevel } from '../entities/role.entity.js';
 
 export class CreateRoleDto {
   @IsString()

@@ -6,10 +6,10 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { CreateRoleDto } from './dto/create-role.dto';
-import { UpdateRoleDto } from './dto/update-role.dto';
-import { Role } from './entities/role.entity';
-import { Employee } from '../employees/entities/employee.entity';
+import { CreateRoleDto } from './dto/create-role.dto.js';
+import { UpdateRoleDto } from './dto/update-role.dto.js';
+import { Role } from './entities/role.entity.js';
+import { Employee } from '../employees/entities/employee.entity.js';
 
 @Injectable()
 export class RolesService {

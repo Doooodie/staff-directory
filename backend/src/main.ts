@@ -4,9 +4,9 @@ import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { FastifyAdapter } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-import { AppModule } from './app.module';
-import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
-import metadata from './metadata';
+import { AppModule } from './app.module.js';
+import { GlobalExceptionFilter } from './common/filters/global-exception.filter.js';
+import metadata from './metadata.js';
 
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 

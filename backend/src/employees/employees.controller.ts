@@ -12,12 +12,12 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 
-import { CreateEmployeeDto } from './dto/create-employee.dto';
-import { GetAllEmployeesQuery } from './dto/get-all-employees.dto';
-import { UpdateEmployeeDto } from './dto/update-employee.dto';
-import { EmployeesService } from './employees.service';
-import { Roles } from '../auth/decorators/roles.decorator';
-import { UserRoleLevel } from '../auth/entities/user.entity';
+import { CreateEmployeeDto } from './dto/create-employee.dto.js';
+import { GetAllEmployeesQuery } from './dto/get-all-employees.dto.js';
+import { UpdateEmployeeDto } from './dto/update-employee.dto.js';
+import { EmployeesService } from './employees.service.js';
+import { Roles } from '../auth/decorators/roles.decorator.js';
+import { UserRoleLevel } from '../auth/entities/user.entity.js';
 
 @ApiBearerAuth()
 @Controller('employees')

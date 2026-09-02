@@ -8,10 +8,10 @@ import {
 } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
 
-import { AuthService } from './auth.service';
-import { Public } from './decorators/public.decorator';
-import { LoginDto } from './dto/login.dto';
-import { RegisterDto } from './dto/register.dto';
+import { AuthService } from './auth.service.js';
+import { Public } from './decorators/public.decorator.js';
+import { LoginDto } from './dto/login.dto.js';
+import { RegisterDto } from './dto/register.dto.js';
 
 @Public()
 @UseInterceptors(ClassSerializerInterceptor)

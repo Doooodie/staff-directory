@@ -6,12 +6,12 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Brackets, Repository } from 'typeorm';
 
-import { CreateEmployeeDto } from './dto/create-employee.dto';
-import { GetAllEmployeesQuery } from './dto/get-all-employees.dto';
-import { UpdateEmployeeDto } from './dto/update-employee.dto';
-import { Employee } from './entities/employee.entity';
-import { Department } from '../departments/entities/department.entity';
-import { Role } from '../roles/entities/role.entity';
+import { CreateEmployeeDto } from './dto/create-employee.dto.js';
+import { GetAllEmployeesQuery } from './dto/get-all-employees.dto.js';
+import { UpdateEmployeeDto } from './dto/update-employee.dto.js';
+import { Employee } from './entities/employee.entity.js';
+import { Department } from '../departments/entities/department.entity.js';
+import { Role } from '../roles/entities/role.entity.js';
 
 @Injectable()
 export class EmployeesService {

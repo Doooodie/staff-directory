@@ -1,11 +1,11 @@
 import { faker } from '@faker-js/faker';
 import { hash } from 'bcryptjs';
 
-import { User, UserRoleLevel } from './auth/entities/user.entity';
-import AppDataSource from './database/app-data-source';
-import { Department } from './departments/entities/department.entity';
-import { Employee } from './employees/entities/employee.entity';
-import { EmployeeRoleLevel, Role } from './roles/entities/role.entity';
+import { User, UserRoleLevel } from './auth/entities/user.entity.js';
+import AppDataSource from './database/app-data-source.js';
+import { Department } from './departments/entities/department.entity.js';
+import { Employee } from './employees/entities/employee.entity.js';
+import { EmployeeRoleLevel, Role } from './roles/entities/role.entity.js';
 
 import type { DeepPartial, ObjectLiteral, Repository } from 'typeorm';
 
