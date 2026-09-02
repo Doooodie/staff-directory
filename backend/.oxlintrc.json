@@ -6,7 +6,6 @@
     "unicorn",
     "oxc",
     "import",
-    "node",
     "vitest",
     "promise"
   ],
@@ -16,7 +15,15 @@
   "rules": {
     "no-console": ["warn", { "allow": ["error", "warn"] }],
     "typescript/no-extraneous-class": ["warn", { "allowWithDecorator": true }],
-    "import/no-cycle": ["error", { "maxDepth": 3 }]
+    "unicorn/prefer-node-protocol": "error",
+    "import/first": "error",
+    "import/newline-after-import": "error",
+    "import/no-duplicates": "error",
+    "import/no-cycle": "error",
+    "sort-imports": [
+      "warn",
+      { "ignoreCase": true, "ignoreDeclarationSort": true }
+    ]
   },
   "overrides": [
     {
