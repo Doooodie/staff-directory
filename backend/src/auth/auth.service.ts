@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import bcrypt from 'bcryptjs';
+import { compare, hash } from 'bcryptjs';
 import { Repository } from 'typeorm';
 
 import { LoginDto } from './dto/login.dto';
@@ -25,7 +25,7 @@ export class AuthService {
       email: loginDto.email,
     });
 
-    if (!user || !(await bcrypt.compare(loginDto.password, user.password))) {
+    if (!user || !(await compare(loginDto.password, user.password))) {
       throw new UnauthorizedException();
     }
 
@@ -39,7 +39,7 @@ export class AuthService {
 
   async register(registerDto: RegisterDto) {
     const { email, password, role } = registerDto;
-    const hash = await bcrypt.hash(password, 10);
+    const passwordHash = await hash(password, 10);
 
     const user = await this.usersRepository.findOneBy({ email });
 
@@ -49,7 +49,7 @@ export class AuthService {
 
     const newUser = this.usersRepository.create({
       email,
-      password: hash,
+      password: passwordHash,
       role: role ?? UserRoleLevel.USER,
     });
 

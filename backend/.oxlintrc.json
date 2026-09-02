@@ -1,0 +1,28 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": [
+    "eslint",
+    "typescript",
+    "unicorn",
+    "oxc",
+    "import",
+    "node",
+    "vitest",
+    "promise"
+  ],
+  "categories": { "suspicious": "warn" },
+  "options": { "typeAware": true, "typeCheck": true },
+  "ignorePatterns": ["src/database/migrations/**"],
+  "rules": {
+    "no-console": ["warn", { "allow": ["error", "warn"] }],
+    "typescript/no-extraneous-class": ["warn", { "allowWithDecorator": true }],
+    "import/no-cycle": ["error", { "maxDepth": 3 }]
+  },
+  "overrides": [
+    {
+      "files": ["**/*.spec.ts"],
+      "env": { "vitest": true },
+      "rules": { "typescript/unbound-method": "off" }
+    }
+  ]
+}

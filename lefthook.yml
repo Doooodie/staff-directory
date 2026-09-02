@@ -1,21 +1,16 @@
 pre-commit:
   parallel: true
   jobs:
-    - name: backend-eslint
+    - name: backend-oxlint
       root: backend/
       glob: "backend/**/*.{ts,mjs}"
-      run: npx eslint --fix {staged_files}
+      run: npx oxlint --fix {staged_files}
       stage_fixed: true
 
     - name: backend-prettier
       root: backend/
       run: npx prettier --ignore-unknown --write {staged_files}
       stage_fixed: true
-
-    - name: backend-typecheck
-      root: backend/
-      glob: "backend/**/*.{ts,mjs}"
-      run: npm run type-check
 
 pre-push:
   jobs:

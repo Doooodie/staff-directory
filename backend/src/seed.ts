@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import bcrypt from 'bcryptjs';
+import { hash } from 'bcryptjs';
 
 import { User, UserRoleLevel } from './auth/entities/user.entity';
 import AppDataSource from './database/app-data-source';
@@ -48,12 +48,12 @@ async function seed() {
     const users = [
       {
         email: 'admin@company.com',
-        password: await bcrypt.hash('Admin123!', 10),
+        password: await hash('Admin123!', 10),
         role: UserRoleLevel.ADMIN,
       },
       {
         email: 'user@company.com',
-        password: await bcrypt.hash('User123!', 10),
+        password: await hash('User123!', 10),
         role: UserRoleLevel.USER,
       },
     ];
